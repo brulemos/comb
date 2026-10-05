@@ -1,0 +1,92 @@
+/* Oculta a calculadora até o Firebase confirmar uma sessão válida. */
+html.auth-pending body {
+  visibility: hidden;
+}
+
+html.auth-ok body {
+  visibility: visible;
+}
+
+.header-title-block {
+  min-width: 0;
+}
+
+.auth-user-box {
+  margin-left: auto;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-items: end;
+  gap: 3px 10px;
+  min-width: 0;
+}
+
+.auth-user-label {
+  grid-column: 1 / -1;
+  color: var(--muted, #5d6978);
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+#authUserEmail {
+  min-width: 0;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--blue-dark, #123a67);
+  font-size: .86rem;
+}
+
+.auth-logout-button {
+  border: 1px solid var(--line, #d7dee8);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--blue-dark, #123a67);
+  min-height: 34px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-logout-button:hover {
+  background: #f3f7fb;
+}
+
+.auth-logout-button:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+@media (max-width: 720px) {
+  .header-inner {
+    flex-wrap: wrap;
+  }
+
+  .header-title-block {
+    flex: 1 1 calc(100% - 80px);
+  }
+
+  .auth-user-box {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+    grid-template-columns: minmax(0, 1fr) auto;
+    justify-items: start;
+    border-top: 1px solid var(--line, #d7dee8);
+    padding-block: 8px 10px;
+  }
+
+  .auth-user-label {
+    display: none;
+  }
+
+  #authUserEmail {
+    max-width: 100%;
+  }
+}
+
