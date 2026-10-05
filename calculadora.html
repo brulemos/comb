@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="auth-pending">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Combustão - LBE</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="description" content="Calculadora técnica de combustão, mistura gasosa, estequiometria, balanço térmico e emissões.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth-app.css">
+  <script type="module" src="auth-guard.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="https://www.ipt.br" target="_blank" rel="noopener noreferrer">
+      <img src="IPT.png" alt="IPT" class="logo">
+    </a>
+    <div class="header-title-block">
+      <h1>Calculadora de Combustão</h1>
+      <p>Laboratório de Bioenergia e Eficiência Energética</p>
+    </div>
+
+    <div class="auth-user-box" aria-label="Sessão do usuário">
+      <span class="auth-user-label">Usuário conectado</span>
+      <strong id="authUserEmail">Verificando...</strong>
+      <button class="auth-logout-button" id="btnLogout" type="button">Sair</button>
+    </div>
+  </div>
+</header>
+
+<div class="summary-strip">
+  <div class="container summary-grid">
+    <div><span>Combustível</span><strong id="sumFuel">—</strong></div>
+    <div><span>Vazão</span><strong id="sumFlow">—</strong></div>
+    <div><span>Potência</span><strong id="sumPower">—</strong></div>
+    <div><span>λ</span><strong id="sumLambda">—</strong></div>
+    <div><span>O₂ seco</span><strong id="sumO2">—</strong></div>
+  </div>
+</div>
+
+<main class="container main-content">
+
+<section class="panel">
+  <div class="section-title">
+    <div>
+      <h2>1. Configuração do caso</h2>
+      <p>Combustível, vazão/potência, comburente e condições de processo.</p>
+    </div>
+    <!--
+    <div class="toolbar">
+      <button class="btn secondary" id="btnNew" type="button">Novo caso</button>
+      <button class="btn secondary" id="btnSaveCase" type="button">Salvar caso</button>
+      <select id="savedCases" aria-label="Casos salvos">
+        <option value="">Carregar caso...</option>
+      </select>
+    </div>
+  -->
+  </div>
+
+  <div class="input-grid">
+
+    <article class="card mixture-card">
+      <h3>Mistura combustível</h3>
+
+      <div class="form-grid two">
+        <label class="field">
+          Preset
+          <select id="presetCombustivel"></select>
+        </label>
+
+        <label class="field">
+          Buscar componente
+          <input id="componentSearch" type="search" placeholder="Ex.: metano, H2, C3H8">
+        </label>
+      </div>
+
+      <!--
+<div class="toolbar compact-toolbar">
+
+  <button class="btn secondary" id="btnSavePreset" type="button">
+    Salvar mistura como preset
+  </button>
+
+  <button class="btn danger" id="btnDeletePreset" type="button" disabled>
+    Excluir preset próprio
+  </button>
+
+</div>
+-->
+
+      <fieldset class="inline-fieldset">
+        <legend>Base da composição</legend>
+
+        <label>
+          <input type="radio" name="baseComposicao" value="molar" checked>
+          % molar
+        </label>
+
+        <label>
+          <input type="radio" name="baseComposicao" value="massica">
+          % mássica
+        </label>
+      </fieldset>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Fórmula</th>
+              <th>%</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="corpoMistura"></tbody>
+        </table>
+      </div>
+
+      <div class="component-actions">
+        <button class="btn secondary" id="btnAdicionar" type="button">
+          + Adicionar componente
+        </button>
+
+        <button class="btn secondary" id="btnNormalizarFracoes" type="button">
+          Normalizar frações
+        </button>
+      </div>
+
+      <div class="composition-box">
+        <div class="composition-head">
+          <span>Total</span>
+          <strong id="totalComposicao">0,00 %</strong>
+        </div>
+
+        <div class="progress">
+          <div id="barraComposicao"></div>
+        </div>
+
+        <small id="statusComposicao">
+          Informe a composição.
+        </small>
+      </div>
+    </article>
+
+
+    <article class="card">
+      <h3>Combustível / carga térmica</h3>
+
+      <fieldset class="inline-fieldset stacked">
+        <legend>Modo de entrada</legend>
+
+        <label>
+          <input type="radio" name="modoEntrada" value="vazao" checked>
+          Informar vazão
+        </label>
+
+        <label>
+          <input type="radio" name="modoEntrada" value="potencia">
+          Informar potência desejada
+        </label>
+      </fieldset>
+
+      <div id="flowInputBlock">
+
+        <label class="field">
+          Tipo de vazão
+
+          <select id="tipoVazao">
+            <option value="massica">Mássica</option>
+            <option value="volumetrica">Volumétrica real</option>
+            <option value="normal">Volumétrica normal</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span id="labelVazaoEntrada">
+            Vazão mássica
+          </span>
+
+          <div class="input-unit">
+            <input
+              type="number"
+              id="vazaoEntrada"
+              value="10.00"
+              min="0"
+              step="0.01"
+            >
+
+            <span id="unidadeVazao">
+              kg/h
+            </span>
+          </div>
+
+          <small id="ajudaVazao"></small>
+        </label>
+
+      </div>
+
+
+      <div id="powerInputBlock" class="hidden">
+
+        <label class="field">
+
+          Potência térmica desejada — PCI
+
+          <div class="input-select">
+
+            <input
+              type="number"
+              id="potenciaDesejada"
+              value="10.0"
+              min="0"
+              step="0.1"
+            >
+
+            <select id="unidadePotenciaDesejada">
+              <option value="kW">kW</option>
+              <option value="MW">MW</option>
+              <option value="cv">cv</option>
+              <option value="hp">hp</option>
+            </select>
+
+          </div>
+
+        </label>
+
+      </div>
+
+
+      <label class="field">
+
+        Temperatura do combustível
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="temperatura"
+            value="25.0"
+            step="0.1"
+          >
+
+          <select id="unidadeTemperatura">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+            <option value="K">K</option>
+          </select>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        Pressão absoluta do combustível
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="pressao"
+            value="1.00"
+            min="0"
+            step="0.01"
+          >
+
+          <select id="unidadePressao">
+            <option value="bar">bar</option>
+            <option value="atm">atm</option>
+            <option value="kgfcm2">kgf/cm²</option>
+          </select>
+
+        </div>
+
+      </label>
+
+    </article>
+
+
+    <article class="card">
+
+      <h3>Comburente</h3>
+
+      <label class="field">
+
+        O₂ do comburente seco
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="o2Comburente"
+            value="20.95"
+            min="0.01"
+            max="100"
+            step="0.01"
+          >
+
+          <span>% mol</span>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        N₂ seco calculado
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="n2Comburente"
+            readonly
+          >
+
+          <span>% mol</span>
+
+        </div>
+
+      </label>
+
+
+      <label class="check-field">
+
+        <input
+          type="checkbox"
+          id="usarUmidadeAr"
+        >
+
+        Adicionar condições do comburente
+
+      </label>
+
+
+      <div
+        id="humidityFields"
+        class="subpanel hidden"
+      >
+
+        <label class="field">
+
+          Temperatura do comburente
+
+          <div class="input-select">
+
+            <input
+              type="number"
+              id="temperaturaComburente"
+              value="25"
+              step="0.1"
+            >
+
+            <select id="unidadeTemperaturaComburente">
+              <option value="C">°C</option>
+              <option value="F">°F</option>
+              <option value="K">K</option>
+            </select>
+
+          </div>
+
+        </label>
+
+
+        <label class="field">
+
+          Umidade relativa
+
+          <div class="input-unit">
+
+            <input
+              type="number"
+              id="umidadeRelativa"
+              value="55"
+              min="0"
+              max="100"
+              step="0.1"
+            >
+
+            <span>%</span>
+
+          </div>
+
+        </label>
+
+
+        <label class="field">
+
+          Pressão absoluta do comburente
+
+          <div class="input-select">
+
+            <input
+              type="number"
+              id="pressaoComburente"
+              value="1"
+              min="0"
+              step="0.01"
+            >
+
+            <select id="unidadePressaoComburente">
+              <option value="bar">bar</option>
+              <option value="atm">atm</option>
+              <option value="kgfcm2">kgf/cm²</option>
+            </select>
+
+          </div>
+
+        </label>
+
+
+        <div class="formula-chip">
+
+          <span>
+            H₂O no comburente
+          </span>
+
+          <strong id="previewH2OAir">
+            —
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <fieldset class="inline-fieldset stacked">
+
+        <legend>
+          Controle de combustão
+        </legend>
+
+        <label>
+          <input
+            type="radio"
+            name="modoCombustao"
+            value="excesso"
+            checked
+          >
+          Informar excesso de comburente
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="modoCombustao"
+            value="o2medido"
+          >
+          Informar O₂ seco medido
+        </label>
+
+      </fieldset>
+
+
+      <label
+        class="field"
+        id="fieldExcesso"
+      >
+
+        Excesso de comburente
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="excessoAr"
+            value="10"
+            min="0"
+            step="0.1"
+          >
+
+          <span>%</span>
+
+        </div>
+
+      </label>
+
+
+      <label
+        class="field hidden"
+        id="fieldO2Medido"
+      >
+
+        O₂ seco medido
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="o2Medido"
+            value="3"
+            min="0"
+            step="0.01"
+          >
+
+          <span>%</span>
+
+        </div>
+
+      </label>
+
+
+      <div class="formula-chip">
+
+        <strong id="lambdaPreview">
+          λ = 1,100
+        </strong>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <div
+    id="mensagemErro"
+    class="alert error hidden"
+    role="alert"
+  ></div>
+
+
+  <div class="actions">
+
+    <button
+      class="btn primary"
+      id="btnCalcular"
+      type="button"
+    >
+      Calcular combustão
+    </button>
+
+    <button
+      class="btn ghost"
+      id="btnLimpar"
+      type="button"
+    >
+      Limpar
+    </button>
+
+  </div>
+
+</section>
+
+
+
+<section class="panel">
+
+  <details>
+
+    <summary>
+      <strong>
+        2. Validade dos dados e avisos
+      </strong>
+    </summary>
+
+
+    <div class="details-content">
+
+      <p>
+        Faixas de Cp, estimativas e premissas aplicadas.
+      </p>
+
+
+      <div
+        id="warningsList"
+        class="warnings-list"
+      >
+        <div class="alert info">
+          Execute um cálculo.
+        </div>
+      </div>
+
+    </div>
+
+  </details>
+
+</section>
+
+
+
+<section class="panel">
+
+  <div class="section-title">
+    <div>
+      <h2>
+        3. Propriedades da mistura
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Massa molar</span>
+      <strong id="resMassaMolar">—</strong>
+      <small>kg/kmol</small>
+    </article>
+
+    <article class="metric">
+      <span>PCS</span>
+      <strong id="resPCS">—</strong>
+      <small>MJ/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>PCI</span>
+      <strong id="resPCI">—</strong>
+      <small>MJ/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>Cp(T)</span>
+      <strong id="resCp">—</strong>
+      <small>kJ/(kg·K)</small>
+    </article>
+
+    <article class="metric">
+      <span>Densidade real</span>
+      <strong id="resDensidade">—</strong>
+      <small>kg/m³</small>
+    </article>
+
+    <article class="metric">
+      <span>Densidade normal</span>
+      <strong id="resDensidadeNormal">—</strong>
+      <small>kg/Nm³</small>
+    </article>
+
+    <article class="metric">
+
+      <span>
+        Wobbe superior
+      </span>
+
+      <strong id="resWobbe">
+        —
+      </strong>
+
+      <select
+        id="unidadeWobbe"
+        class="unit-select"
+      >
+
+        <option value="MJNm3">MJ/Nm³</option>
+        <option value="kWhNm3">kWh/Nm³</option>
+        <option value="kcalNm3">kcal/Nm³</option>
+        <option value="MJkg">MJ/kg</option>
+        <option value="kWhkg">kWh/kg</option>
+        <option value="kcalkg">kcal/kg</option>
+
+      </select>
+
+    </article>
+
+
+    <article class="metric">
+
+      <span>
+        Vazão do combustível
+      </span>
+
+      <strong id="resVazaoResultado">
+        —
+      </strong>
+
+      <select
+        id="unidadeVazaoResultado"
+        class="unit-select"
+      >
+
+        <option value="kgh">kg/h</option>
+        <option value="m3h">m³/h</option>
+        <option value="nm3h">Nm³/h</option>
+
+      </select>
+
+    </article>
+
+
+    <article class="metric highlight">
+
+      <span>
+        Potência térmica — PCI
+      </span>
+
+      <strong id="resPotencia">
+        —
+      </strong>
+
+      <select
+        id="unidadePotencia"
+        class="unit-select"
+      >
+
+        <option value="kW">kW</option>
+        <option value="MW">MW</option>
+        <option value="cv">cv</option>
+        <option value="hp">hp</option>
+
+      </select>
+
+    </article>
+
+  </div>
+
+
+  <h3 class="subheading">
+    Detalhamento da mistura
+  </h3>
+
+
+  <div class="table-wrap">
+
+    <table class="data-table">
+
+      <thead>
+
+        <tr>
+          <th>Componente</th>
+          <th>% mol</th>
+          <th>% massa</th>
+          <th>M</th>
+          <th>PCS</th>
+          <th>PCI</th>
+          <th>Cp(T)</th>
+          <th>Método Cp</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="mixtureDetailBody">
+        <tr>
+          <td colspan="8">
+            Execute o cálculo.
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <h3 class="subheading">
+    Composição elementar mássica
+  </h3>
+
+  <p class="muted">
+    Percentual em massa dos elementos no combustível. Z representa a fração residual de elementos não representados por C, H, N, O e S.
+  </p>
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Carbono — C</span>
+      <strong id="resElemC">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Hidrogênio — H</span>
+      <strong id="resElemH">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Nitrogênio — N</span>
+      <strong id="resElemN">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Oxigênio — O</span>
+      <strong id="resElemO">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Enxofre — S</span>
+      <strong id="resElemS">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Z — outros</span>
+      <strong id="resElemZ">—</strong>
+      <small>% massa</small>
+    </article>
+
+  </div>
+
+</section>
+
+
+
+<section class="panel">
+
+  <div class="section-title">
+    <div>
+      <h2>
+        4. Estequiometria e combustão
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Comburente estequiométrico</span>
+      <strong id="resArEsteq">—</strong>
+      <small>kg/h</small>
+    </article>
+
+    <article class="metric">
+      <span>Comburente real</span>
+      <strong id="resArReal">—</strong>
+      <small>kg/h</small>
+    </article>
+
+    <article class="metric">
+      <span>AFR estequiométrico</span>
+      <strong id="resAFREsteq">—</strong>
+      <small>kg/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>AFR real</span>
+      <strong id="resAFRReal">—</strong>
+      <small>kg/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>Lambda</span>
+      <strong id="resLambda">—</strong>
+      <small>—</small>
+    </article>
+
+    <article class="metric">
+      <span>Excesso</span>
+      <strong id="resExcesso">—</strong>
+      <small>%</small>
+    </article>
+
+    <article class="metric">
+      <span>O₂ seco</span>
+      <strong id="resO2Seco">—</strong>
+      <small>% vol</small>
+    </article>
+
+    <article class="metric">
+      <span>CO₂ seco</span>
+      <strong id="resCO2Seco">—</strong>
+      <small>% vol</small>
+    </article>
+
+    <article class="metric">
+      <span>H₂O úmido</span>
+      <strong id="resH2OUmido">—</strong>
+      <small>% vol</small>
+    </article>
+
+    <article class="metric highlight">
+      <span>Temperatura adiabática estimada</span>
+      <strong id="resTad">—</strong>
+      <small>°C</small>
+    </article>
+
+  </div>
+
+</section>
+
+
+
+<section class="panel">
+
+  <div class="section-title">
+
+    <div>
+
+      <h2>
+        5. Balanço térmico, chaminé e emissões
+      </h2>
+
+      <p>
+        Resultados de engenharia em base PCI.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="subpanel process-conditions">
+
+    <h3>
+      Condições dos gases de chaminé e referência de emissões
+    </h3>
+
+
+    <div class="control-grid">
+
+
+      <label class="field">
+
+        Temperatura dos gases
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="temperaturaProdutos"
+            value="180"
+            step="0.1"
+          >
+
+          <select id="unidadeTemperaturaProdutos">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+            <option value="K">K</option>
+          </select>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        Pressão absoluta dos gases
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="pressaoProdutos"
+            value="1"
+            min="0"
+            step="0.01"
+          >
+
+          <select id="unidadePressaoProdutos">
+            <option value="bar">bar</option>
+            <option value="atm">atm</option>
+            <option value="kgfcm2">kgf/cm²</option>
+          </select>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        O₂ de referência para correções de emissões
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="o2Referencia"
+            value="3"
+            min="0"
+            max="20.8"
+            step="0.1"
+          >
+
+          <span>%</span>
+
+        </div>
+
+      </label>
+
+    </div>
+
+  </div>
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Potência química — PCI</span>
+      <strong id="resQChemical">—</strong>
+      <small>kW</small>
+    </article>
+
+    <article class="metric">
+      <span>Mol dos gases de combustão</span>
+      <strong id="resFlueMoles">—</strong>
+      <small>kmol/h</small>
+    </article>
+
+    <article class="metric">
+      <span>Cp dos gases de combustão</span>
+      <strong id="resFlueCp">—</strong>
+      <small>kJ/(kg·K)</small>
+    </article>
+
+    <article class="metric">
+      <span>Densidade dos gases de combustão</span>
+      <strong id="resFlueDensity">—</strong>
+      <small>kg/m³</small>
+    </article>
+
+    <article class="metric">
+      <span>PCI dos gases de combustão</span>
+      <strong id="resFluePCI">—</strong>
+      <small>MJ/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>Entalpia sensível dos gases</span>
+      <strong id="resFlueEnthalpy">—</strong>
+      <small>kJ/kg — ref. 25 °C</small>
+    </article>
+
+    <article class="metric">
+      <span>Ponto de orvalho de H₂O</span>
+      <strong id="resDewPoint">—</strong>
+      <small>°C</small>
+    </article>
+
+  </div>
+
+
+  <h3 class="subheading">
+    Emissões estequiométricas de CO₂
+  </h3>
+
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>CO₂</span>
+      <strong id="resCO2kgH">—</strong>
+      <small>kg/h</small>
+    </article>
+
+    <article class="metric">
+      <span>CO₂ específico</span>
+      <strong id="resCO2kgKg">—</strong>
+      <small>kg/kg combustível</small>
+    </article>
+
+    <article class="metric">
+      <span>Intensidade de carbono</span>
+      <strong id="resCO2kgMJ">—</strong>
+      <small>kg/MJ combustível</small>
+    </article>
+
+    <article class="metric">
+      <span>CO₂ por energia térmica</span>
+      <strong id="resCO2kgKWh">—</strong>
+      <small>kg/kWh térmico</small>
+    </article>
+
+    <article class="metric">
+      <span>CO₂ diário</span>
+      <strong id="resCO2tDay">—</strong>
+      <small>t/dia</small>
+    </article>
+
+  </div>
+
+</section>
+
+
+
+<section class="panel">
+
+  <div class="section-title">
+    <div>
+      <h2>
+        6. Balanços de massa e elementos
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="balance-grid">
+
+    <article class="card">
+
+      <h3>
+        Balanço de massa
+      </h3>
+
+      <div class="balance-lines">
+
+        <div>
+          <span>Combustível</span>
+          <strong id="balFuel">—</strong>
+        </div>
+
+        <div>
+          <span>Comburente</span>
+          <strong id="balOxid">—</strong>
+        </div>
+
+        <div>
+          <span>Total entrada</span>
+          <strong id="balInput">—</strong>
+        </div>
+
+        <div>
+          <span>Total produtos</span>
+          <strong id="balOutput">—</strong>
+        </div>
+
+        <div class="total">
+          <span>Erro</span>
+          <strong id="balError">—</strong>
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <article class="card">
+
+      <h3>
+        Balanço elementar
+      </h3>
+
+      <div class="table-wrap">
+
+        <table class="data-table">
+
+          <thead>
+
+            <tr>
+              <th>Elemento</th>
+              <th>Entrada kmol-at/h</th>
+              <th>Saída kmol-at/h</th>
+              <th>Erro %</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="elementBalanceBody">
+
+            <tr>
+              <td colspan="4">
+                Execute o cálculo.
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+
+<section class="panel">
+
+  <div class="section-title">
+    <div>
+      <h2>
+        7. Produtos da combustão
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="control-grid">
+
+    <label class="field">
+
+      Base
+
+      <select id="baseProdutos">
+        <option value="umida">Úmida</option>
+        <option value="seca">Seca</option>
+      </select>
+
+    </label>
+
+
+    <label class="field">
+
+      Exibir composição
+
+      <select id="modoTabelaProdutos">
+        <option value="mol">% molar</option>
+        <option value="massa">% mássica</option>
+        <option value="ppmv">ppmv</option>
+        <option value="mgnm3">mg/Nm³</option>
+      </select>
+
+    </label>
+
+
+    <label class="field">
+
+      Vazão dos gases
+
+      <select id="tipoVazaoProdutos">
+        <option value="massica">kg/h</option>
+        <option value="volumetrica">m³/h</option>
+      </select>
+
+    </label>
+
+  </div>
+
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Vazão dos gases</span>
+      <strong id="resVazaoProdutos">—</strong>
+      <small id="resUnidadeVazaoProdutos">kg/h</small>
+    </article>
+
+    <article class="metric">
+      <span>Densidade dos gases</span>
+      <strong id="resDensidadeProdutos">—</strong>
+      <small>kg/m³</small>
+    </article>
+
+    <article class="metric">
+      <span>Massa molar</span>
+      <strong id="resMassaMolarProdutos">—</strong>
+      <small>kg/kmol</small>
+    </article>
+
+    <article class="metric">
+      <span>SO₂</span>
+      <strong id="resSO2Produtos">—</strong>
+      <small id="resSO2BaseLabel">ppmv</small>
+    </article>
+
+    <article class="metric">
+      <span>SO₂</span>
+      <strong id="resSO2mgProdutos">—</strong>
+      <small>mg/Nm³</small>
+    </article>
+
+    <article class="metric">
+      <span>SO₂ corrigido a O₂ ref.</span>
+      <strong id="resSO2Corrigido">—</strong>
+      <small>mg/Nm³ seco</small>
+    </article>
+
+  </div>
+
+
+  <p class="muted">
+    Correção a O₂ de referência: aplicada às concentrações em base seca.
+    O₂ e H₂O não são corrigidos; vazões, massas e balanços permanecem inalterados.
+  </p>
+
+  <div class="table-wrap">
+
+    <table class="data-table">
+
+      <thead>
+
+        <tr>
+          <th>Componente</th>
+          <th>kmol/h</th>
+          <th>kg/h</th>
+          <th id="productCompositionHeader">% molar</th>
+          <th id="productO2RefHeader">
+            Corrigido a O₂ ref.<br>
+            <small>mg/Nm³ seco</small>
+          </th>
+        </tr>
+
+      </thead>
+
+      <tbody id="corpoProdutos">
+
+        <tr>
+          <td colspan="5">
+            Execute o cálculo.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+
+<section class="panel" id="estimatedEmissionsPanel">
+
+  <details>
+
+    <summary>
+      <strong>
+        8. Emissões reais estimadas
+      </strong>
+    </summary>
+
+
+    <div class="details-content">
+
+    <p>
+      Estimativa de CO, NOx, CH₄ e VOC por fatores documentados. Não substitui medição em analisador.
+    </p>
+    
+
+    <div class="alert info emission-intro">
+      <strong>Importante:</strong> fatores de emissão representam médias de populações de equipamentos.
+      O cálculo usa a entrada térmica em base PCS e a vazão seca calculada para converter massa em ppmvd e mg/Nm³.
+    </div>
+
+    <div class="control-grid">
+
+      <label class="field">
+        Modelo de emissão
+        <select id="emissionModel">
+          <option value="ideal">Ideal — CO e NOx = 0</option>
+          <option value="factors" selected>Fatores de emissão</option>
+          <option value="advanced">Modelo avançado / semiempírico</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Tipo de equipamento
+        <select id="emissionEquipment">
+          <option value="boiler">Caldeira industrial</option>
+          <option value="furnace">Forno</option>
+          <option value="burner">Queimador</option>
+          <option value="turbine">Turbina</option>
+          <option value="engine">Motor</option>
+          <option value="custom">Personalizado</option>
+        </select>
+      </label>
+
+      <label class="field" id="emissionCategoryField">
+        Categoria / condição do fator
+        <select id="emissionCategory"></select>
+      </label>
+
+    </div>
+
+    <div id="emissionCustomFields" class="card emission-settings hidden">
+      <h3>Fatores personalizados</h3>
+      <p class="muted">Informe fatores em kg/GJ de entrada térmica (base PCS).</p>
+
+      <div class="control-grid">
+        <label class="field">NOx como NO₂ <div class="input-unit"><input id="customEFNOx" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+        <label class="field">CO <div class="input-unit"><input id="customEFCO" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+        <label class="field">CH₄ <div class="input-unit"><input id="customEFCH4" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+        <label class="field">VOC/THC <div class="input-unit"><input id="customEFVOC" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+      </div>
+
+      <label class="field">
+        Fonte / observação do fator personalizado
+        <input id="customEFNote" type="text" placeholder="Ex.: ensaio LBE, certificado do fabricante, norma...">
+      </label>
+    </div>
+
+    <div id="emissionAdvancedFields" class="card emission-settings hidden">
+      <h3>Contexto avançado</h3>
+      <p class="muted">Temperatura e tempo de residência são usados como contexto de engenharia e tendência; não alteram numericamente o fator AP-42 sem calibração específica do equipamento.</p>
+
+      <div class="control-grid">
+        <label class="field">
+          Temperatura da chama
+          <select id="emissionFlameMode">
+            <option value="factor">Usar Tad × fator</option>
+            <option value="manual">Informar manualmente</option>
+          </select>
+        </label>
+
+        <label class="field" id="emissionTadFactorField">
+          Fator sobre Tad
+          <input id="emissionTadFactor" type="number" min="0.1" max="1.2" step="0.01" value="1.00">
+        </label>
+
+        <label class="field hidden" id="emissionFlameTempField">
+          Temperatura real da chama
+          <div class="input-unit"><input id="emissionFlameTemp" type="number" step="1" value="1500"><span>°C</span></div>
+        </label>
+
+        <label class="field">
+          Tempo de residência
+          <div class="input-unit"><input id="emissionResidence" type="number" min="0" step="0.01" value="0.50"><span>s</span></div>
+        </label>
+
+        <label class="field">
+          Tipo de queimador / controle
+          <select id="emissionBurnerType">
+            <option value="conventional">Convencional</option>
+            <option value="low_nox">Low-NOx</option>
+            <option value="low_nox_fgr">Low-NOx + FGR</option>
+          </select>
+        </label>
+
+        <label class="field">
+          Fração molar de NO no NOx
+          <div class="input-unit"><input id="emissionNOFraction" type="number" min="0" max="100" step="0.1" placeholder="opcional"><span>%</span></div>
+          <small>Opcional. Sem este valor, AP-42 fornece apenas NOx total como NO₂ equivalente.</small>
+        </label>
+      </div>
+    </div>
+
+    <div class="actions left-actions">
+      <button class="btn primary" id="btnEstimateEmissions" type="button">Atualizar estimativa</button>
+    </div>
+
+    <div class="result-grid emission-summary-grid">
+      <article class="metric"><span>CO estimado</span><strong id="resEmCOkgH">—</strong><small>kg/h</small></article>
+      <article class="metric"><span>NOx estimado</span><strong id="resEmNOxkgH">—</strong><small>kg/h como NO₂</small></article>
+      <article class="metric"><span>O₂ seco após ajuste</span><strong id="resEmO2Dry">—</strong><small>% vol</small></article>
+      <article class="metric"><span>Fechamento de C</span><strong id="resEmCarbonClosure">—</strong><small>CO₂ + CO + CH₄</small></article>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table emission-table">
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>ppmvd</th>
+            <th>mg/Nm³</th>
+            <th>kg/h</th>
+            <th id="emissionO2RefHeader">Corrigido @ 3% O₂</th>
+          </tr>
+        </thead>
+        <tbody id="emissionResultsBody">
+          <tr><td colspan="5">Execute o cálculo principal e atualize a estimativa.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="emission-details-grid">
+      <article class="card">
+        <h3>Fator aplicado e rastreabilidade</h3>
+        <div id="emissionFactorInfo" class="analysis-result">Execute o cálculo para visualizar a fonte.</div>
+      </article>
+
+      <article class="card">
+        <h3>Fechamento e interpretação</h3>
+        <div id="emissionBalanceInfo" class="analysis-result">CO e CH₄ serão realocados a partir do CO₂/H₂O ideal para preservar C/H/O. NOx permanece como massa equivalente de NO₂.</div>
+      </article>
+    </div>
+
+    <div id="emissionWarnings"></div>
+
+    </div>
+
+  </details>
+
+</section>
+
+
+<section class="panel">
+
+  <details>
+    <summary>
+      <strong>
+        9. Mistura automática por alvo
+      </strong>
+    </summary>
+  
+  <div class="details-content">
+
+      <p>
+        Adiciona um componente à mistura atual mantendo a proporção relativa dos demais.
+      </p>
+
+  <div class="control-grid">
+
+    <label class="field">
+
+      Propriedade-alvo
+
+      <select id="blendProperty">
+        <option value="WOBBE">Wobbe superior (MJ/Nm³)</option>
+        <option value="PCI">PCI (MJ/kg)</option>
+        <option value="PCS">PCS (MJ/kg)</option>
+      </select>
+
+    </label>
+
+
+    <label class="field">
+
+      Valor-alvo
+
+      <input
+        type="number"
+        id="blendTarget"
+        value="50"
+        step="0.01"
+      >
+
+    </label>
+
+
+    <label class="field">
+
+      Componente a adicionar
+
+      <select id="blendAdditive"></select>
+
+    </label>
+
+  </div>
+
+
+  <div class="actions left-actions">
+
+    <button
+      class="btn primary"
+      id="btnSolveBlend"
+      type="button"
+    >
+      Resolver mistura
+    </button>
+
+
+    <button
+      class="btn secondary"
+      id="btnApplyBlend"
+      type="button"
+      disabled
+    >
+      Aplicar à mistura
+    </button>
+
+  </div>
+
+
+  <div
+    id="blendResult"
+    class="analysis-result"
+  >
+    Defina o alvo e execute a solução.
+  </div>
+
+  </div>
+
+  </details>
+
+</section>
+
+
+<section class="panel">
+
+  <details>
+
+    <summary>
+      <strong>
+        10. Análise de sensibilidade
+      </strong>
+    </summary>
+
+    <div class="details-content">
+
+      <p>
+        Cada parâmetro é perturbado isoladamente em torno do caso-base.
+      </p>
+
+
+  <div class="control-grid">
+
+    <label class="field">
+
+      Resultado analisado
+
+      <select id="sensitivityOutput">
+        <option value="power">Potência térmica</option>
+        <option value="wobbe">Wobbe</option>
+        <option value="density">Densidade do combustível</option>
+        <option value="o2dry">O₂ seco</option>
+        <option value="co2dry">CO₂ seco</option>
+        <option value="tad">Tad</option>
+        <option value="stackloss">Perda de chaminé</option>
+        <option value="co2emission">CO₂ kg/h</option>
+      </select>
+
+    </label>
+
+
+    <label class="field">
+
+      Componente
+
+      <select id="sensitivityComponent"></select>
+
+    </label>
+
+
+    <label class="field">
+
+      Δ componente relativo
+
+      <div class="input-unit">
+
+        <input
+          type="number"
+          id="sensCompDelta"
+          value="5"
+          min="0"
+          step="0.1"
+        >
+
+        <span>%</span>
+
+      </div>
+
+    </label>
+
+
+    <label class="field">
+
+      Δ temperatura combustível
+
+      <div class="input-unit">
+
+        <input
+          type="number"
+          id="sensTempDelta"
+          value="5"
+          min="0"
+          step="0.1"
+        >
+
+        <span>°C</span>
+
+      </div>
+
+    </label>
+
+
+    <label class="field">
+
+      Δ pressão combustível
+
+      <div class="input-unit">
+
+        <input
+          type="number"
+          id="sensPressureDelta"
+          value="0.1"
+          min="0"
+          step="0.01"
+        >
+
+        <span>bar</span>
+
+      </div>
+
+    </label>
+
+
+    <label class="field">
+
+      Δ O₂ comburente
+
+      <div class="input-unit">
+
+        <input
+          type="number"
+          id="sensO2Delta"
+          value="1"
+          min="0"
+          step="0.1"
+        >
+
+        <span>p.p.</span>
+
+      </div>
+
+    </label>
+
+  </div>
+
+
+  <div class="actions left-actions">
+
+    <button
+      class="btn primary"
+      id="btnSensitivity"
+      type="button"
+    >
+      Analisar sensibilidade
+    </button>
+
+  </div>
+
+
+  <div class="table-wrap">
+
+    <table class="data-table">
+
+      <thead>
+
+        <tr>
+          <th>Parâmetro</th>
+          <th>-Δ</th>
+          <th>Base</th>
+          <th>+Δ</th>
+          <th>Maior desvio relativo</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="sensitivityBody">
+
+        <tr>
+          <td colspan="5">
+            Execute o cálculo principal e depois a análise.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  </div>
+
+  </details>
+
+</section>
+
+
+
+<section class="panel">
+
+  <div class="section-title">
+    <div>
+      <h2>
+        11. Gráficos e análise de processo
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="charts-grid">
+
+    <article class="chart-card">
+      <h3>Mistura combustível — % mol</h3>
+      <canvas id="fuelChart"></canvas>
+    </article>
+
+
+    <article class="chart-card">
+      <h3>Comburente — % mol úmido</h3>
+      <canvas id="oxidizerChart"></canvas>
+    </article>
+
+
+    <article class="chart-card">
+      <h3>Gases de combustão</h3>
+      <canvas id="productsChart"></canvas>
+    </article>
+
+
+    <article class="chart-card">
+      <h3>Comburente estequiométrico × real</h3>
+      <canvas id="oxidizerDemandChart"></canvas>
+    </article>
+
+
+    <article class="chart-card wide-chart">
+
+      <div class="chart-card-header">
+
+        <div>
+          <h3>
+            Excesso de comburente × O₂ / CO₂ seco
+          </h3>
+        </div>
+
+        <label class="chart-control">
+
+          Faixa
+
+          <select id="chartExcessMax">
+            <option value="30">0–30%</option>
+            <option value="50" selected>0–50%</option>
+            <option value="100">0–100%</option>
+            <option value="200">0–200%</option>
+          </select>
+
+        </label>
+
+      </div>
+
+      <canvas id="processCurveChart"></canvas>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+
+<section class="panel">
+
+    <div class="section-title">
+
+        <div>
+
+            <h2>
+                12. Exportação
+            </h2>
+
+            <p>
+                Relatórios e dados do caso calculado.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="toolbar">
+
+        <button
+            class="btn primary"
+            id="btnCsv"
+            type="button"
+        >
+            Exportar CSV
+        </button>
+
+
+        <button
+            class="btn secondary"
+            id="btnPrint"
+            type="button"
+        >
+            Imprimir
+        </button>
+
+
+    </div>
+
+</section>
+
+
+
+<section class="panel">
+
+  <details>
+
+    <summary>
+      <strong>
+        13. Premissas e limitações
+      </strong>
+    </summary>
+
+
+    <div class="assumptions">
+
+      <p>
+        <strong>Combustão:</strong>
+        o cálculo estequiométrico principal permanece ideal: C→CO₂, H→H₂O, S→SO₂ e N do combustível→N₂.
+        A seção de emissões reais estimadas calcula CO, NOx, CH₄ e VOC separadamente por fatores de emissão;
+        não é um modelo de equilíbrio químico ou cinética detalhada.
+      </p>
+
+      <p>
+        <strong>Ar úmido:</strong>
+        O₂ e N₂ informados são tratados como composição seca.
+        O vapor d'água é calculado a partir da temperatura,
+        pressão e umidade relativa.
+      </p>
+
+      <p>
+        <strong>Balanço térmico:</strong>
+        a perda de chaminé apresentada é sensível e referenciada
+        a 25 °C, em base PCI. Não inclui radiação, convecção externa,
+        purgas, cinzas ou perdas mecânicas.
+      </p>
+
+      <p>
+        <strong>Ponto de orvalho:</strong>
+        refere-se à condensação de água.
+        Não é ponto de orvalho ácido por H₂SO₄.
+      </p>
+
+      <p>
+        <strong>CO₂:</strong>
+        emissão estequiométrica bruta.
+        O programa não distingue carbono fóssil e biogênico.
+      </p>
+
+      <p>
+        <strong>Tad:</strong>
+        modelo adiabático sem dissociação química;
+        pode superestimar temperaturas elevadas.
+      </p>
+
+      <p>
+        <strong>Nm³:</strong>
+        0 °C e 101,325 kPa absolutos.
+      </p>
+
+    </div>
+
+  </details>
+
+</section>
+
+</main>
+
+
+<dialog id="componentTraceDialog" class="trace-dialog" aria-labelledby="componentTraceTitle">
+  <div class="trace-dialog-shell">
+    <div class="trace-dialog-header">
+      <div>
+        <span class="trace-kicker">Rastreabilidade do banco de dados</span>
+        <h2 id="componentTraceTitle">Ficha técnica do componente</h2>
+      </div>
+      <button type="button" class="trace-close" id="btnCloseTrace" aria-label="Fechar ficha técnica">×</button>
+    </div>
+
+    <div id="componentTraceBody" class="trace-dialog-body">
+      Selecione um componente.
+    </div>
+  </div>
+</dialog>
+
+
+<footer class="site-footer">
+
+  <div class="container footer-inner">
+
+    <a
+      href="https://www.ipt.br"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+
+      <img
+        src="IPT.png"
+        alt="IPT"
+        class="logo"
+      >
+
+    </a>
+
+
+    <div>
+
+      <strong>
+        EN / LBE
+      </strong>
+
+      <span>
+        Desenvolvido por brunolemos@ipt.br
+      </span>
+
+      <span>
+        Versão
+        <b id="appVersion">0.0.8</b>
+        · Banco de dados criado em setembro/2026
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+</body>
+</html>
