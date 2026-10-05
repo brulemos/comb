@@ -5228,6 +5228,83 @@ function renderProducts() {
         );
 
 
+    const dryFractions =
+
+        C.fractions(
+
+            C.productBasis(
+
+                last.products,
+
+                "seca"
+
+            )
+
+        );
+
+
+    const dryById =
+
+        new Map(
+
+            dryFractions.map(
+
+                i => [
+                    i.id,
+                    i
+                ]
+
+            )
+
+        );
+
+
+    const o2Reference =
+
+        num(
+            "#o2Referencia"
+        );
+
+
+    const correctedProductAtO2Reference = i => {
+
+        if (
+            i.id === "O2"
+            ||
+            i.id === "H2O"
+        ) {
+
+            return NaN;
+
+        }
+
+        const dryItem =
+
+            dryById.get(
+                i.id
+            );
+
+        if (
+            !dryItem
+        ) {
+
+            return NaN;
+
+        }
+
+        return C.correctedConcentrationAtO2(
+
+            dryItem.mgNm3,
+
+            last.dry.o2DryPct,
+
+            o2Reference
+
+        );
+
+    };
+
+
 
     const massMode =
 
@@ -5336,9 +5413,7 @@ function renderProducts() {
 
                 last.dry.o2DryPct,
 
-                num(
-                    "#o2Referencia"
-                )
+                o2Reference
 
             ),
 
@@ -5374,6 +5449,14 @@ function renderProducts() {
 
     $("#productCompositionHeader").textContent =
         labels[mode];
+
+
+    $("#productO2RefHeader").innerHTML =
+
+        `Corrigido a O₂ ref.<br><small>${fmt(
+            o2Reference,
+            2
+        )}% O₂ — mg/Nm³ seco</small>`;
 
 
 
@@ -5442,6 +5525,13 @@ function renderProducts() {
                             4;
 
 
+                const corrected =
+
+                    correctedProductAtO2Reference(
+                        i
+                    );
+
+
 
                 return `
 
@@ -5467,6 +5557,16 @@ function renderProducts() {
 
                         <td class="num">
                             ${fmt(value, digits)}
+                        </td>
+
+                        <td class="num">
+                            ${
+                                Number.isFinite(corrected)
+                                    ?
+                                    fmt(corrected, 2)
+                                    :
+                                    "—"
+                            }
                         </td>
 
                     </tr>
@@ -8568,7 +8668,7 @@ function clearResults() {
     els.productBody.innerHTML = `
 
         <tr>
-            <td colspan="4">
+            <td colspan="5">
                 Execute o cálculo.
             </td>
         </tr>
@@ -8927,11 +9027,91 @@ function csvText() {
             "Produtos",
             "kmol/h",
             "kg/h",
-            "%mol"
+            "%mol",
+            "mg/Nm3 seco corrigido a O2 ref."
         ]
 
     );
 
+
+
+    const csvO2Reference =
+
+        num(
+            "#o2Referencia"
+        );
+
+
+    const csvDryProducts =
+
+        new Map(
+
+            C.fractions(
+
+                C.productBasis(
+
+                    last.products,
+
+                    "seca"
+
+                )
+
+            )
+            .map(
+
+                i => [
+                    i.id,
+                    i
+                ]
+
+            )
+
+        );
+
+
+    const csvCorrectedAtO2Reference = i => {
+
+        if (
+            i.id === "O2"
+            ||
+            i.id === "H2O"
+        ) {
+
+            return "";
+
+        }
+
+        const dryItem =
+
+            csvDryProducts.get(
+                i.id
+            );
+
+        if (
+            !dryItem
+        ) {
+
+            return "";
+
+        }
+
+        const corrected =
+
+            C.correctedConcentrationAtO2(
+
+                dryItem.mgNm3,
+
+                last.dry.o2DryPct,
+
+                csvO2Reference
+
+            );
+
+        return Number.isFinite(corrected)
+            ? corrected
+            : "";
+
+    };
 
 
     C.fractions(
@@ -8949,7 +9129,9 @@ function csvText() {
 
                 i.kgH,
 
-                i.y * 100
+                i.y * 100,
+
+                csvCorrectedAtO2Reference(i)
 
             ])
 
