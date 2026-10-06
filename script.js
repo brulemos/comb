@@ -60,12 +60,38 @@ const $$ = s =>
 
 
 
+const DISPLAY_MAX_DECIMALS = 4;
+
+
 const fmt = (
     n,
     d = 2
-) =>
+) => {
 
-    Number.isFinite(n)
+
+    const requestedDigits =
+        Number(d);
+
+
+    const digits =
+        Number.isFinite(requestedDigits)
+
+            ?
+
+            Math.min(
+                DISPLAY_MAX_DECIMALS,
+                Math.max(
+                    0,
+                    Math.trunc(requestedDigits)
+                )
+            )
+
+            :
+
+            2;
+
+
+    return Number.isFinite(n)
 
         ?
 
@@ -76,10 +102,10 @@ const fmt = (
             {
 
                 minimumFractionDigits:
-                    d,
+                    digits,
 
                 maximumFractionDigits:
-                    d
+                    digits
 
             }
 
@@ -88,6 +114,8 @@ const fmt = (
         :
 
         "—";
+
+};
 
 
 
@@ -2573,7 +2601,7 @@ function updateLambdaPreview() {
 
 
         els.lambdaPreview.textContent =
-            "λ = calculado pelo O₂ seco";
+            "λ = calculado pelo O₂ seco (válido para λ ≥ 1)";
 
 
         return;
@@ -4086,10 +4114,21 @@ function renderCombustion() {
 
     els.lambdaPreview.textContent =
 
-        `λ = ${fmt(
-            last.lambda,
-            3
-        )}`;
+        combustionMode() === "o2medido"
+
+            ?
+
+            `λ = ${fmt(
+                last.lambda,
+                3
+            )} (via O₂ seco; válido para λ ≥ 1)`
+
+            :
+
+            `λ = ${fmt(
+                last.lambda,
+                3
+            )}`;
 
 }
 
@@ -5471,19 +5510,32 @@ function renderProducts() {
 
 
 
+    const basisLabel =
+
+        basis === "seca"
+
+            ?
+
+            "base seca"
+
+            :
+
+            "base úmida";
+
+
     const labels = {
 
         mol:
-            "% molar",
+            `% molar (${basisLabel})`,
 
         massa:
-            "% mássica",
+            `% mássica (${basisLabel})`,
 
         ppmv:
-            "ppmv",
+            `ppmv (${basisLabel})`,
 
         mgnm3:
-            "mg/Nm³"
+            `mg/Nm³ (${basisLabel})`
 
     };
 
@@ -5491,6 +5543,10 @@ function renderProducts() {
 
     $("#productCompositionHeader").textContent =
         labels[mode];
+
+
+    $("#resSO2mgBaseLabel").textContent =
+        `mg/Nm³ (${basisLabel})`;
 
 
     $("#productO2RefHeader").innerHTML =
@@ -9208,15 +9264,37 @@ function csvText() {
 
                     .map(
 
-                        v =>
+                        v => {
 
-                            `"${String(
-                                v ?? ""
+
+                            const csvValue =
+
+                                typeof v === "number"
+                                &&
+                                Number.isFinite(v)
+
+                                    ?
+
+                                    Number(
+                                        v.toFixed(
+                                            DISPLAY_MAX_DECIMALS
+                                        )
+                                    )
+
+                                    :
+
+                                    (v ?? "");
+
+
+                            return `"${String(
+                                csvValue
                             )
                             .replace(
                                 /"/g,
                                 '""'
-                            )}"`
+                            )}"`;
+
+                        }
 
                     )
 

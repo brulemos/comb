@@ -456,7 +456,7 @@
             name="modoCombustao"
             value="o2medido"
           >
-          Informar O₂ seco medido
+          Informar O₂ seco medido (válido para λ ≥ 1)
         </label>
 
       </fieldset>
@@ -648,9 +648,6 @@
         <option value="MJNm3">MJ/Nm³</option>
         <option value="kWhNm3">kWh/Nm³</option>
         <option value="kcalNm3">kcal/Nm³</option>
-        <option value="MJkg">MJ/kg</option>
-        <option value="kWhkg">kWh/kg</option>
-        <option value="kcalkg">kcal/kg</option>
 
       </select>
 
@@ -865,7 +862,7 @@
     </article>
 
     <article class="metric highlight">
-      <span>Temperatura adiabática estimada</span>
+      <span>Temperatura adiabática estimada — sem dissociação química</span>
       <strong id="resTad">—</strong>
       <small>°C</small>
     </article>
@@ -1181,8 +1178,8 @@
       Base
 
       <select id="baseProdutos">
-        <option value="umida">Úmida</option>
-        <option value="seca">Seca</option>
+        <option value="umida">Úmida (inclui H₂O)</option>
+        <option value="seca">Seca (exclui H₂O)</option>
       </select>
 
     </label>
@@ -1245,7 +1242,7 @@
     <article class="metric">
       <span>SO₂</span>
       <strong id="resSO2mgProdutos">—</strong>
-      <small>mg/Nm³</small>
+      <small id="resSO2mgBaseLabel">mg/Nm³ (base úmida)</small>
     </article>
 
     <article class="metric">
@@ -1258,8 +1255,10 @@
 
 
   <p class="muted">
-    Correção a O₂ de referência: aplicada às concentrações em base seca.
-    O₂ e H₂O não são corrigidos; vazões, massas e balanços permanecem inalterados.
+    A coluna de composição segue a base selecionada acima: úmida (inclui H₂O) ou seca (exclui H₂O).
+    A correção a O₂ de referência é sempre calculada em base seca. Se O₂ ref. = O₂ seco medido,
+    a concentração corrigida é igual à concentração em mg/Nm³ seco. O₂ e H₂O não são corrigidos;
+    vazões, massas e balanços permanecem inalterados.
   </p>
 
   <div class="table-wrap">
