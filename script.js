@@ -5228,18 +5228,21 @@ function renderProducts() {
         );
 
 
+    const dryProducts =
+
+        C.productBasis(
+
+            last.products,
+
+            "seca"
+
+        );
+
+
     const dryFractions =
 
         C.fractions(
-
-            C.productBasis(
-
-                last.products,
-
-                "seca"
-
-            )
-
+            dryProducts
         );
 
 
@@ -5257,6 +5260,33 @@ function renderProducts() {
             )
 
         );
+
+
+    const measuredO2DryPct =
+
+        Number.isFinite(
+            Number(
+                last?.dry?.o2DryPct
+            )
+        )
+
+            ?
+
+            Number(
+                last.dry.o2DryPct
+            )
+
+            :
+
+            (
+                Number(
+                    dryById.get("O2")?.y
+                )
+                ||
+                0
+            )
+            *
+            100;
 
 
     const o2Reference =
@@ -5284,8 +5314,20 @@ function renderProducts() {
                 i.id
             );
 
+
+        const dryMgNm3 =
+
+            Number(
+                dryItem?.mgNm3
+            );
+
+
         if (
-            !dryItem
+            !Number.isFinite(dryMgNm3)
+            ||
+            !Number.isFinite(measuredO2DryPct)
+            ||
+            !Number.isFinite(o2Reference)
         ) {
 
             return NaN;
@@ -5294,9 +5336,9 @@ function renderProducts() {
 
         return C.correctedConcentrationAtO2(
 
-            dryItem.mgNm3,
+            dryMgNm3,
 
-            last.dry.o2DryPct,
+            measuredO2DryPct,
 
             o2Reference
 
@@ -5411,7 +5453,7 @@ function renderProducts() {
 
                 drySummary.so2MgNm3,
 
-                last.dry.o2DryPct,
+                measuredO2DryPct,
 
                 o2Reference
 
@@ -9779,9 +9821,7 @@ $("#unidadeVazaoResultado")
 
     "#modoTabelaProdutos",
 
-    "#tipoVazaoProdutos",
-
-    "#o2Referencia"
+    "#tipoVazaoProdutos"
 
 ]
 .forEach(
@@ -9804,6 +9844,142 @@ $("#unidadeVazaoResultado")
                 renderCharts();
 
             }
+
+        )
+
+);
+
+
+const refreshO2ReferenceResults = () => {
+
+    if (
+        !last
+        ||
+        $("#o2Referencia").value.trim() === ""
+    ) {
+
+        return;
+
+    }
+
+
+    renderProducts();
+
+    estimateEmissions(
+        true
+    );
+
+    renderCharts();
+
+};
+
+
+$("#o2Referencia")
+    .addEventListener(
+
+        "input",
+
+        refreshO2ReferenceResults
+
+    );
+
+
+$("#o2Referencia")
+    .addEventListener(
+
+        "change",
+
+        refreshO2ReferenceResults
+
+    );
+
+
+let processConditionRecalcTimer =
+    null;
+
+
+const scheduleProcessConditionRecalculation = () => {
+
+    if (
+        !last
+        ||
+        $("#temperaturaProdutos").value.trim() === ""
+        ||
+        $("#pressaoProdutos").value.trim() === ""
+    ) {
+
+        return;
+
+    }
+
+
+    clearTimeout(
+        processConditionRecalcTimer
+    );
+
+
+    processConditionRecalcTimer =
+
+        setTimeout(
+
+            calculate,
+
+            120
+
+        );
+
+};
+
+
+[
+
+    "#temperaturaProdutos",
+
+    "#pressaoProdutos"
+
+]
+.forEach(
+
+    s => {
+
+        $(s).addEventListener(
+
+            "input",
+
+            scheduleProcessConditionRecalculation
+
+        );
+
+
+        $(s).addEventListener(
+
+            "change",
+
+            scheduleProcessConditionRecalculation
+
+        );
+
+    }
+
+);
+
+
+[
+
+    "#unidadeTemperaturaProdutos",
+
+    "#unidadePressaoProdutos"
+
+]
+.forEach(
+
+    s =>
+
+        $(s).addEventListener(
+
+            "change",
+
+            scheduleProcessConditionRecalculation
 
         )
 
