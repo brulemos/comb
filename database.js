@@ -2125,3 +2125,39 @@ window.GAS_DATABASE = [
     )
 
 ];
+
+/*
+===============================================================================
+SMILES COMPLEMENTARES PARA VISUALIZAÇÃO MOLECULAR 3D (JMOL)
+===============================================================================
+
+Os hidrocarbonetos estimados por Joback já carregam SMILES no próprio registro.
+Os componentes abaixo utilizam Cp de referência NIST e, por isso, recebem aqui
+um identificador estrutural complementar. Este bloco não participa dos cálculos
+termodinâmicos; serve apenas para rastreabilidade e visualização molecular.
+
+===============================================================================
+*/
+
+const JMOL_SMILES_BY_ID = Object.freeze({
+    N2: "N#N",
+    NO: "[N]=O",
+    O2: "O=O",
+    NO2: "[N+](=O)[O-]",
+    H2: "[H][H]",
+    H2S: "S",
+    H2O: "O",
+    CO: "[C-]#[O+]",
+    CO2: "O=C=O",
+    CH4: "C",
+    C2H2: "C#C",
+    C2H4: "C=C",
+    SO2: "O=S=O"
+});
+
+window.GAS_DATABASE.forEach(gas => {
+    if (!gas.smiles && JMOL_SMILES_BY_ID[gas.id]) {
+        gas.smiles = JMOL_SMILES_BY_ID[gas.id];
+    }
+});
+

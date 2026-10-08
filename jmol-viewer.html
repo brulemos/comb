@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visualizador molecular 3D</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #jmolFallback {
+      box-sizing: border-box;
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 24px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #5d6872;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="jmolFallback" role="status">
+    Não foi possível carregar o visualizador 3D. Verifique a conexão com a internet ou use “Abrir em nova aba”.
+  </div>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const model = String(params.get("model") || "").trim();
+      const fallback = document.getElementById("jmolFallback");
+
+      if (!model) {
+        fallback.style.display = "flex";
+        fallback.textContent = "Modelo molecular não informado.";
+        return;
+      }
+
+      // O endpoint do St. Olaf documenta &inline como a forma de inserir
+      // Jmol/JSmol em uma página via <script>. Usamos document.write aqui
+      // durante a análise inicial deste documento auxiliar para que o script
+      // remoto seja executado no fluxo normal de carregamento da página.
+      const src =
+        "https://chemapps.stolaf.edu/jmol/jmol.php?model=" +
+        encodeURIComponent(model) +
+        "&inline&id=traceJmolApplet&width=100%25&height=100%25";
+
+      const safeSrc = src
+        .replace(/&/g, "&amp;")
+        .replace(/\"/g, "&quot;");
+
+      document.write(
+        `<script type="text/javascript" src="${safeSrc}" onerror="document.getElementById('jmolFallback').style.display='flex';"><\/script>`
+      );
+    }());
+  </script>
+</body>
+</html>

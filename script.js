@@ -971,6 +971,38 @@ function renderTraceBibliography(gas) {
 }
 
 
+
+function jmolUrlForGas(gas) {
+
+    const model =
+        String(gas?.smiles || "")
+            .trim();
+
+    if (!model) {
+        return "";
+    }
+
+    return `https://chemapps.stolaf.edu/jmol/jmol.php?model=${encodeURIComponent(model)}`;
+}
+
+
+function jmolEmbeddedUrlForGas(gas) {
+
+    const model =
+        String(gas?.smiles || "")
+            .trim();
+
+    if (!model) {
+        return "";
+    }
+
+    // Não apontamos o iframe diretamente para chemapps.stolaf.edu,
+    // pois o servidor pode recusar enquadramento por outro domínio.
+    // Em vez disso, carregamos uma página local do próprio site; ela
+    // usa o modo oficial &inline do Jmol por <script>.
+    return `jmol-viewer.html?model=${encodeURIComponent(model)}`;
+}
+
 function openComponentTrace(gasId) {
 
     const gas =
@@ -1024,6 +1056,12 @@ function openComponentTrace(gasId) {
         ||
         {};
 
+    const jmolUrl =
+        jmolUrlForGas(gas);
+
+    const jmolEmbeddedUrl =
+        jmolEmbeddedUrlForGas(gas);
+
     const methodLabel =
         gas.cpShomate?.metodo === "NIST_SHOMATE"
 
@@ -1052,7 +1090,67 @@ function openComponentTrace(gasId) {
                 <h3>${esc(gas.nome)}</h3>
                 <span class="trace-id">ID: ${esc(gas.id)}</span>
             </div>
+
+            ${jmolEmbeddedUrl ? `
+                <button
+                    type="button"
+                    class="trace-jmol-toggle"
+                    aria-expanded="false"
+                    aria-controls="traceJmolPanel"
+                    data-jmol-src="${esc(jmolEmbeddedUrl)}"
+                    title="Exibir o modelo molecular 3D dentro desta ficha técnica"
+                >
+                    <span class="trace-jmol-icon" aria-hidden="true">3D</span>
+                    <span class="trace-jmol-toggle-label">Visualizar 3D</span>
+                    <span class="trace-jmol-chevron" aria-hidden="true">⌄</span>
+                </button>
+            ` : ""}
         </div>
+
+        ${jmolEmbeddedUrl ? `
+            <section
+                id="traceJmolPanel"
+                class="trace-jmol-panel"
+                aria-label="Modelo molecular 3D interativo"
+                hidden
+            >
+                <div class="trace-jmol-panel-header">
+                    <div>
+                        <strong>Modelo molecular 3D</strong>
+                        <span>Jmol/JSmol · estrutura gerada a partir do SMILES</span>
+                    </div>
+
+                    <a
+                        class="trace-jmol-open-external"
+                        href="${esc(jmolUrl)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Abrir em nova aba
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </div>
+
+                <div class="trace-jmol-viewer">
+                    <div class="trace-jmol-loading" role="status">
+                        Carregando visualizador 3D…
+                    </div>
+                    <iframe
+                        class="trace-jmol-frame"
+                        title="Modelo 3D interativo de ${esc(gas.nome)}"
+                        data-src="${esc(jmolEmbeddedUrl)}"
+                        loading="lazy"
+                        allow="fullscreen"
+                    ></iframe>
+                </div>
+
+                <p class="trace-jmol-help">
+                    Arraste para girar a molécula e use a roda do mouse ou gesto de pinça para aplicar zoom.
+                    O visualizador é carregado pelo modo inline oficial do Jmol e requer conexão com a internet.
+                    Se ele não carregar, use “Abrir em nova aba”.
+                </p>
+            </section>
+        ` : ""}
 
         <div class="trace-grid">
             <section class="trace-section">
@@ -1173,6 +1271,21 @@ function closeComponentTrace() {
         !els.traceDialog
     ) {
         return;
+    }
+
+    const jmolFrame =
+        els.traceBody
+            ?.querySelector(
+                ".trace-jmol-frame"
+            );
+
+    if (jmolFrame?.getAttribute("src")) {
+        // Encerra o JSmol ao fechar a ficha; uma nova abertura cria
+        // um visualizador limpo e evita processamento oculto.
+        jmolFrame.setAttribute(
+            "src",
+            "about:blank"
+        );
     }
 
     if (
@@ -9594,6 +9707,100 @@ els.mixtureDetail.addEventListener(
     }
 
 );
+
+
+els.traceBody
+    ?.addEventListener(
+
+        "click",
+
+        e => {
+
+            const toggle =
+                e.target.closest(
+                    ".trace-jmol-toggle"
+                );
+
+            if (!toggle) {
+                return;
+            }
+
+            const panel =
+                els.traceBody.querySelector(
+                    "#traceJmolPanel"
+                );
+
+            if (!panel) {
+                return;
+            }
+
+            const isExpanded =
+                toggle.getAttribute(
+                    "aria-expanded"
+                ) === "true";
+
+            const nextExpanded =
+                !isExpanded;
+
+            toggle.setAttribute(
+                "aria-expanded",
+                String(nextExpanded)
+            );
+
+            panel.hidden =
+                !nextExpanded;
+
+            const label =
+                toggle.querySelector(
+                    ".trace-jmol-toggle-label"
+                );
+
+            if (label) {
+                label.textContent =
+                    nextExpanded
+                        ? "Ocultar 3D"
+                        : "Visualizar 3D";
+            }
+
+            if (!nextExpanded) {
+                return;
+            }
+
+            const frame =
+                panel.querySelector(
+                    ".trace-jmol-frame"
+                );
+
+            if (
+                frame
+                &&
+                !frame.getAttribute("src")
+            ) {
+                const loading =
+                    panel.querySelector(
+                        ".trace-jmol-loading"
+                    );
+
+                frame.addEventListener(
+                    "load",
+                    () => {
+                        if (loading) {
+                            loading.hidden = true;
+                        }
+                    },
+                    { once: true }
+                );
+
+                frame.setAttribute(
+                    "src",
+                    toggle.dataset.jmolSrc
+                    ||
+                    frame.dataset.src
+                );
+            }
+        }
+
+    );
 
 
 $("#btnCloseTrace")
