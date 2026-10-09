@@ -12,7 +12,8 @@ const scriptsDaCalculadora = [
   "presets.js",
   "formulas.js",
   "emissions.js",
-  "script.js"
+  "script.js",
+  "misturador.js"
 ];
 
 function voltarParaLogin() {

@@ -47,10 +47,6 @@
         return;
       }
 
-      // O endpoint do St. Olaf documenta &inline como a forma de inserir
-      // Jmol/JSmol em uma página via <script>. Usamos document.write aqui
-      // durante a análise inicial deste documento auxiliar para que o script
-      // remoto seja executado no fluxo normal de carregamento da página.
       const src =
         "https://chemapps.stolaf.edu/jmol/jmol.php?model=" +
         encodeURIComponent(model) +

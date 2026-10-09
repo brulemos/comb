@@ -8834,6 +8834,10 @@ function reset() {
 
     hideError();
 
+    // Notifica módulos complementares para descartar o estado do caso limpo.
+    // Presets e receitas salvos permanentemente não são excluídos.
+    document.dispatchEvent(new Event("combustion:reset"));
+
 }
 
 
