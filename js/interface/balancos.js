@@ -128,6 +128,7 @@ export function renderProducts() {
                     *
                         100;
         const o2Reference = num("#o2Referencia");
+        const oxidizerO2Pct = estado.ultimoCaso.opts.dryO2Pct;
         const correctedProductAtO2Reference = i => {
             if (i.id === "O2"
                 ||
@@ -143,7 +144,7 @@ export function renderProducts() {
                     !Number.isFinite(o2Reference)) {
                 return NaN;
             }
-            return C.correctedConcentrationAtO2(dryMgNm3, measuredO2DryPct, o2Reference);
+            return C.correctedConcentrationAtO2(dryMgNm3, measuredO2DryPct, o2Reference, oxidizerO2Pct);
         };
         const massMode = $("#tipoVazaoProdutos").value
             ===
@@ -172,7 +173,16 @@ export function renderProducts() {
             fmt(summary.so2MgNm3, 2);
         const drySummary = C.productSummary(C.productBasis(estado.ultimoCaso.products, "seca"), C.CONFIG.Tn, C.CONFIG.Pn);
         $("#resSO2Corrigido").textContent =
-            fmt(C.correctedConcentrationAtO2(drySummary.so2MgNm3, measuredO2DryPct, o2Reference), 2);
+            fmt(C.correctedConcentrationAtO2(drySummary.so2MgNm3, measuredO2DryPct, o2Reference, oxidizerO2Pct), 2);
+        const aviso = $("#avisoCorrecaoO2Gas");
+        if (aviso) {
+            const enriquecido = Math.abs(oxidizerO2Pct - 20.95) > 0.2;
+            const invalido = !Number.isFinite(o2Reference) || o2Reference < 0 || o2Reference >= 20.9;
+            aviso.classList.toggle("hidden", !enriquecido && !invalido);
+            aviso.textContent = invalido
+                ? "O₂ de referência inválido: informe um valor de 0 até menos de 20,9%."
+                : "Correção convencional a O₂ de referência indisponível com comburente enriquecido/não atmosférico. Valores corrigidos exibidos como —; demais resultados não são alterados.";
+        }
         const mode = $("#modoTabelaProdutos").value;
         const basisLabel = basis === "seca"
             ?

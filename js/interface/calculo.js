@@ -138,6 +138,9 @@ export function computeCase(comp, opts, presetName = null) {
         if (thermal.extrapolated) {
             warnings.push("Balanço térmico/perda de chaminé utiliza extrapolação de Cp em pelo menos uma espécie.");
         }
+        if (Math.abs(opts.dryO2Pct - 20.95) > 0.2) {
+            warnings.push("Correção a O₂ de referência não aplicável com comburente enriquecido/não atmosférico; utilize concentrações secas não corrigidas.");
+        }
         if (opts.combustionMode
             ===
                 "o2medido") {

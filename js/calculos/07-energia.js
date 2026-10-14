@@ -165,36 +165,43 @@ export function adiabaticFlameTemperature({ comp, fuelMolarFlow, fuelMassFlow, p
     const residual = T => productsSensibleEnthalpy(products, CONFIG.Tref, T).value
         -
             target;
-    let lo = CONFIG.Tref;
-    let hi = 4000;
-    if (residual(hi) < 0) {
-        hi =
-            6000;
+    // A solução deve estar entre dois extremos com sinais opostos no resíduo.
+    // Temperaturas abaixo de 25 °C são possíveis em misturas muito diluídas
+    // e pré-resfriadas, portanto Tref não pode ser sempre o limite inferior.
+    const limiteBaixoK = 150; // faixa numérica mínima; não significa validade das correlações
+    const limiteAltoK = 6000;
+    const resRef = residual(CONFIG.Tref);
+    let lo = resRef > 0 ? limiteBaixoK : CONFIG.Tref;
+    let hi = resRef > 0 ? CONFIG.Tref : 4000;
+    let resLo = resRef > 0 ? residual(lo) : resRef;
+    let resHi = residual(hi);
+    if (resRef <= 0 && resHi < 0) {
+        hi = limiteAltoK;
+        resHi = residual(hi);
     }
-    if (residual(hi) < 0) {
+    if (!Number.isFinite(resLo) || !Number.isFinite(resHi) ||
+        resLo > 0 || resHi < 0) {
         return {
             temperatureK: NaN,
-            warnings: [
-                "Não foi possível fechar o balanço de entalpia até 6000 K."
-            ]
+            energyResidualKJH: NaN,
+            warnings: ["Não foi possível encontrar temperatura adiabática com fechamento energético no intervalo de 150 a 6000 K. Verifique composição, propriedades e temperaturas de entrada."]
         };
     }
     for (let i = 0; i < 100; i++) {
-        const mid = (lo + hi)
-            /
-                2;
-        if (residual(mid) < 0) {
-            lo =
-                mid;
-        }
-        else {
-            hi =
-                mid;
-        }
+        const mid = (lo + hi) / 2;
+        if (residual(mid) < 0) lo = mid;
+        else hi = mid;
     }
-    const T = (lo + hi)
-        /
-            2;
+    const T = (lo + hi) / 2;
+    const energyResidualKJH = residual(T);
+    const tolerancia = 1e-7 * Math.max(1, Math.abs(target));
+    if (!Number.isFinite(energyResidualKJH) || Math.abs(energyResidualKJH) > tolerancia) {
+        return {
+            temperatureK: NaN,
+            energyResidualKJH,
+            warnings: ["Temperatura adiabática não convergiu: resíduo do balanço energético excede a tolerância."]
+        };
+    }
     const hp = productsSensibleEnthalpy(products, CONFIG.Tref, T);
     const warnings = [
         "Tad assume combustão completa, gás ideal, processo adiabático e sem dissociação química."
@@ -211,6 +218,7 @@ export function adiabaticFlameTemperature({ comp, fuelMolarFlow, fuelMassFlow, p
     }
     return {
         temperatureK: T,
+        energyResidualKJH,
         warnings
     };
 }

@@ -52,9 +52,11 @@ export function cpMolar(gas, T) {
             extrapolated: true
         };
     }
+    if (!Number.isFinite(T) || T <= 0) {
+        throw new Error(`Temperatura inválida no cálculo de Cp de ${gas?.nome || gas?.id || 'espécie'}.`);
+    }
     const t = T / 1000;
-    return {
-        value: range.A
+    const value = range.A
             +
                 range.B
                     *
@@ -70,9 +72,13 @@ export function cpMolar(gas, T) {
             +
                 range.E
                     /
-                        t ** 2,
-        extrapolated
-    };
+                        t ** 2;
+    // Extrapolação é mantida quando positiva, com o aviso preexistente.
+    // Cp ≤ 0 não é fisicamente admissível: nunca propagar ao balanço térmico.
+    if (!Number.isFinite(value) || value <= 0) {
+        throw new Error(`Cp não físico para ${gas?.nome || gas?.id || 'espécie'} a ${T.toFixed(2)} K: ${value} J/(mol·K). Correlação fora do domínio; utilize dados válidos.`);
+    }
+    return { value, extrapolated };
 }
 
 /** Converte Cp molar para Cp mássico em kJ/(kg·K), usando massa molar. */

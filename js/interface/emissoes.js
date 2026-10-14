@@ -1,3 +1,4 @@
+import { fatorCorrecaoO2 } from '../calculos/correcao-o2.js';
 /**
  * Emissões estimadas, fatores e suas informações de origem
  * Extraído do controlador original sem alterar as expressões dos cálculos.
@@ -184,23 +185,8 @@ export function collectEmissionOptions() {
         };
     }
 
-export function emissionO2CorrectionFactor(measured, reference) {
-        if (!Number.isFinite(measured)
-            ||
-                !Number.isFinite(reference)
-            ||
-                measured >= 20.9
-            ||
-                reference >= 20.9) {
-            return NaN;
-        }
-        return (20.9
-            -
-                reference)
-            /
-                (20.9
-                    -
-                        measured);
+export function emissionO2CorrectionFactor(measured, reference, oxidizerO2Pct = 20.95) {
+        return fatorCorrecaoO2(measured, reference, oxidizerO2Pct);
     }
 
 export function renderEstimatedEmissionResults() {
@@ -222,7 +208,7 @@ export function renderEstimatedEmissionResults() {
             fmt(e.balance.carbonClosurePct, 4)
                 +
                     "%";
-        const corrFactor = emissionO2CorrectionFactor(e.dry.o2Pct, ref);
+        const corrFactor = emissionO2CorrectionFactor(e.dry.o2Pct, ref, e.oxidizerO2Pct);
         const speciesFromPpm = (ppm, molarMass) => {
             if (!Number.isFinite(ppm)) {
                 return null;
@@ -467,7 +453,8 @@ export function estimateEmissions(silent = false) {
                     products: estado.ultimoCaso.products,
                     comp: estado.ultimoCaso.comp,
                     config: C.CONFIG,
-                    o2ReferencePct: num("#o2Referencia")
+                    o2ReferencePct: num("#o2Referencia"),
+                    oxidizerO2Pct: estado.ultimoCaso.opts.dryO2Pct
                 });
             renderEstimatedEmissionResults();
         }

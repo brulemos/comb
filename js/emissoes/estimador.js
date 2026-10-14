@@ -1,3 +1,4 @@
+import { concentracaoCorrigidaO2, comburenteAtmosferico, referenciaO2Valida } from '../calculos/correcao-o2.js';
 /**
  * Estimativa de emissões e ajustes dos produtos
  * Base seca, O₂ de referência e balanço de carbono. Mesmas equações da versão original.
@@ -73,14 +74,8 @@ export function concentration(rateKgH, molarMass, dry) {
         mgNm3: dry.nm3H > 0 ? rateKgH * 1e6 / dry.nm3H : 0
     };
 }
-export function o2Correct(value, measuredO2, referenceO2) {
-    const cm = Number(measuredO2);
-    const cr = Number(referenceO2);
-    if (!Number.isFinite(value) || !Number.isFinite(cm) || !Number.isFinite(cr))
-        return NaN;
-    if (cm >= 20.9 || cr >= 20.9)
-        return NaN;
-    return value * (20.9 - cr) / (20.9 - cm);
+export function o2Correct(value, measuredO2, referenceO2, o2ComburentePct = 20.95) {
+    return concentracaoCorrigidaO2(value, measuredO2, referenceO2, o2ComburentePct);
 }
 export function naturalGasApplicability(comp) {
     const ch4 = (comp || []).find(i => i.gas?.id === "CH4");
@@ -93,7 +88,7 @@ export function naturalGasApplicability(comp) {
         naturalGasLike: methanePct >= 85 && fuelBoundN < 0.01
     };
 }
-export function estimate({ model = "factors", equipment = "boiler", category, custom, energyInputGJH, products, comp, config, o2ReferencePct = 3, advanced = {} }) {
+export function estimate({ model = "factors", equipment = "boiler", category, custom, energyInputGJH, products, comp, config, o2ReferencePct = 3, oxidizerO2Pct = 20.95, advanced = {} }) {
     const warnings = [];
     let factor;
     if (model === "ideal")
@@ -145,12 +140,19 @@ export function estimate({ model = "factors", equipment = "boiler", category, cu
     const nox = concentration(noxKgH, MW.NO2, dry); // NOx expresso como NO2 equivalente
     const vocMgNm3 = dry.nm3H > 0 ? vocKgH * 1e6 / dry.nm3H : 0;
     const ref = Number(o2ReferencePct);
-    co.mgNm3Ref = o2Correct(co.mgNm3, dry.o2Pct, ref);
-    co.ppmvdRef = o2Correct(co.ppmvd, dry.o2Pct, ref);
-    nox.mgNm3Ref = o2Correct(nox.mgNm3, dry.o2Pct, ref);
-    nox.ppmvdRef = o2Correct(nox.ppmvd, dry.o2Pct, ref);
-    ch4.ppmvdRef = o2Correct(ch4.ppmvd, dry.o2Pct, ref);
-    const vocMgNm3Ref = o2Correct(vocMgNm3, dry.o2Pct, ref);
+    if (!comburenteAtmosferico(oxidizerO2Pct)) {
+        warnings.push('Correção convencional a O₂ de referência indisponível para comburente não atmosférico/enriquecido; concentrações secas não corrigidas permanecem válidas.');
+    }
+    if (!referenciaO2Valida(ref)) {
+        warnings.push('O₂ de referência inválido (intervalo permitido: 0 ≤ O₂ ref. < 20,9%). Correção desabilitada.');
+    }
+    co.mgNm3Ref = o2Correct(co.mgNm3, dry.o2Pct, ref, oxidizerO2Pct);
+    co.ppmvdRef = o2Correct(co.ppmvd, dry.o2Pct, ref, oxidizerO2Pct);
+    nox.mgNm3Ref = o2Correct(nox.mgNm3, dry.o2Pct, ref, oxidizerO2Pct);
+    nox.ppmvdRef = o2Correct(nox.ppmvd, dry.o2Pct, ref, oxidizerO2Pct);
+    ch4.ppmvdRef = o2Correct(ch4.ppmvd, dry.o2Pct, ref, oxidizerO2Pct);
+    ch4.mgNm3Ref = o2Correct(ch4.mgNm3, dry.o2Pct, ref, oxidizerO2Pct);
+    const vocMgNm3Ref = o2Correct(vocMgNm3, dry.o2Pct, ref, oxidizerO2Pct);
     let noPpmvd = NaN;
     let no2Ppmvd = NaN;
     const split = Number(advanced.noFractionPct);
@@ -176,6 +178,7 @@ export function estimate({ model = "factors", equipment = "boiler", category, cu
         factor,
         energyInputGJH: input,
         o2ReferencePct: ref,
+        oxidizerO2Pct,
         dry,
         rates: {
             coKgH,

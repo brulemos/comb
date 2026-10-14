@@ -14,7 +14,8 @@ const scriptsDaCalculadora = [
   "formulas.js",
   "emissions.js",
   "script.js",
-  "misturador.js"
+  "misturador.js",
+  "biomassa.js"
 ];
 
 function voltarParaLogin() {
@@ -26,7 +27,7 @@ function carregarScript(src) {
     const script = document.createElement("script");
     // Todos os seis pontos de entrada são módulos ES nativos.
     // A ordem sequencial preserva as APIs globais utilizadas pela interface.
-    if (["database.js", "presets.js", "formulas.js", "emissions.js", "script.js", "misturador.js"].includes(src)) {
+    if (["database.js", "presets.js", "formulas.js", "emissions.js", "script.js", "misturador.js", "biomassa.js"].includes(src)) {
       script.type = "module";
     }
     script.src = src;

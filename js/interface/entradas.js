@@ -178,6 +178,14 @@ export function collectOptions() {
                         humidity.rhPct > 100)) {
             throw new Error("Verifique temperatura, pressão e umidade relativa do comburente.");
         }
+        // A validação é feita no JS mesmo que o HTML tenha min/max:
+        // entradas podem ser alteradas via scripts, colagem ou edição de atributos.
+        const referencia = $("#o2Referencia");
+        const referenciaO2 = Number(referencia?.value);
+        if (!referencia || referencia.value.trim() === "" ||
+            !Number.isFinite(referenciaO2) || referenciaO2 < 0 || referenciaO2 >= 20.9) {
+            throw new Error("O₂ de referência inválido: informe valor de 0 até menos de 20,9%.");
+        }
         const opts = {
             fuelT,
             fuelP,

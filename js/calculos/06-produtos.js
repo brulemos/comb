@@ -1,3 +1,4 @@
+import { concentracaoCorrigidaO2 } from './correcao-o2.js';
 /**
  * CÁLCULOS / PRODUTOS
  * Produtos, composições seca e úmida, lambda e balanços.
@@ -291,21 +292,9 @@ export function lambdaFromMeasuredO2({ atoms, fuelMolarFlow, fuelMassFlow, o2Sto
             2;
 }
 
-/** Corrige concentração para O₂ de referência (base seca). */
-export function correctedConcentrationAtO2(value, o2Measured, o2Reference) {
-    const denom = 20.9
-        -
-            o2Measured;
-    if (denom <= 0) {
-        return NaN;
-    }
-    return (value
-        *
-            (20.9
-                -
-                    o2Reference)
-        /
-            denom);
+/** Corrige concentração em base seca somente com comburente equivalente ao ar atmosférico. */
+export function correctedConcentrationAtO2(value, o2Measured, o2Reference, o2Comburente = 20.95) {
+    return concentracaoCorrigidaO2(value, o2Measured, o2Reference, o2Comburente);
 }
 
 /* =========================================================

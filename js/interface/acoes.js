@@ -359,7 +359,7 @@ export function csvText() {
             if (!dryItem) {
                 return "";
             }
-            const corrected = C.correctedConcentrationAtO2(dryItem.mgNm3, estado.ultimoCaso.dry.o2DryPct, csvO2Reference);
+            const corrected = C.correctedConcentrationAtO2(dryItem.mgNm3, estado.ultimoCaso.dry.o2DryPct, csvO2Reference, estado.ultimoCaso.opts.dryO2Pct);
             return Number.isFinite(corrected)
                 ? corrected
                 : "";
