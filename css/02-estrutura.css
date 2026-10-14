@@ -1,0 +1,92 @@
+/* 02-estrutura — Cabeçalho, rodapé e barra de resumo */
+
+/* CABEÇALHO / RODAPÉ */
+
+.site-header, .site-footer {
+  background: #fff;
+  color: var(--text);
+}
+
+.site-header {
+  border-bottom: 4px solid var(--blue);
+}
+
+.header-inner, .footer-inner {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  width: 88px;
+  max-height: 62px;
+  object-fit: contain;
+  display: block;
+}
+
+.header-inner h1 {
+  margin: 0 0 5px;
+  color: var(--blue-dark);
+  font-size: clamp( 1.35rem, 2.4vw, 2rem );
+}
+
+.header-inner p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.site-footer {
+  margin-top: 34px;
+  border-top: 1px solid var(--line);
+}
+
+.footer-inner div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.footer-inner span {
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+/* RESUMO SUPERIOR */
+
+.summary-strip {
+  background: var(--blue-dark);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .12);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+}
+
+.summary-grid > div {
+  padding: 10px 14px;
+  border-right: 1px solid rgba(255, 255, 255, .18);
+  min-width: 0;
+}
+
+.summary-grid span {
+  display: block;
+  font-size: .68rem;
+  color: #cfe3ec;
+  text-transform: uppercase;
+}
+
+.summary-grid strong {
+  display: block;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: .9rem;
+}

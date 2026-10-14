@@ -1,0 +1,81 @@
+/* 07-graficos-e-premissas — Gráficos e apresentação das premissas */
+
+/* GRÁFICOS */
+
+.chart-card {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 16px;
+  background: #fff;
+  min-width: 0;
+}
+
+.chart-card h3 {
+  margin: 0 0 10px;
+  color: var(--blue-dark);
+  font-size: .95rem;
+}
+
+.chart-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.chart-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: .75rem;
+  color: var(--muted);
+}
+
+.chart-control select {
+  min-width: 105px;
+  min-height: 34px;
+  padding: 4px 7px;
+}
+
+.chart-card canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+}
+
+.wide-chart {
+  min-width: 0;
+}
+
+/* PREMISSAS */
+
+details summary {
+  cursor: pointer;
+  color: var(--blue-dark);
+  padding: 5px 0;
+}
+
+details summary strong {
+  font-size: 1.25rem;
+}
+
+.details-content {
+  margin-top: 14px;
+}
+
+.details-content > p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.assumptions {
+  margin-top: 14px;
+  color: #455a64;
+  line-height: 1.55;
+}
+
+.assumptions p {
+  margin: 9px 0;
+}

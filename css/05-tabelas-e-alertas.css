@@ -1,0 +1,132 @@
+/* 05-tabelas-e-alertas — Tabelas, composição e mensagens de alerta */
+
+/* TABELAS */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+}
+
+.data-table th {
+  background: #edf3f6;
+  color: #37474f;
+  text-align: left;
+  padding: 10px 9px;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+
+.data-table td {
+  padding: 9px;
+  border-bottom: 1px solid #edf0f2;
+  vertical-align: middle;
+}
+
+.data-table td.num {
+  text-align: right;
+}
+
+.data-table select, .data-table input {
+  min-width: 120px;
+}
+
+.formula-cell {
+  font-weight: 700;
+  text-align: center;
+}
+
+.remove-row {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 4px;
+  background: #ffebee;
+  color: var(--red);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* COMPOSIÇÃO */
+
+.composition-box {
+  margin-top: 16px;
+}
+
+.composition-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  font-size: .85rem;
+}
+
+.progress {
+  height: 11px;
+  background: #e3e8eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress > div {
+  height: 100%;
+  width: 0;
+  background: var(--orange);
+  transition: width .2s;
+}
+
+.progress > div.ok {
+  background: var(--green);
+}
+
+.progress > div.error {
+  background: var(--red);
+}
+
+#statusComposicao {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+/* ALERTAS */
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 5px;
+  border-left: 4px solid;
+  margin-bottom: 8px;
+  line-height: 1.45;
+}
+
+.alert.error {
+  background: #ffebee;
+  border-color: var(--red);
+  color: #8e0000;
+}
+
+.alert.warning {
+  background: #fff3e0;
+  border-color: var(--orange);
+  color: #7b3900;
+}
+
+.alert.info {
+  background: #eaf5fa;
+  border-color: var(--blue);
+  color: #134b63;
+}
+
+.alert.success {
+  background: #e8f5e9;
+  border-color: var(--green);
+  color: #205b24;
+}
+
+.warnings-list {
+  display: grid;
+  gap: 4px;
+}

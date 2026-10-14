@@ -1,0 +1,164 @@
+<section class="panel" id="estimatedEmissionsPanel">
+
+  <details>
+
+    <summary>
+      <strong>
+        8. Emissões reais estimadas
+      </strong>
+    </summary>
+
+
+    <div class="details-content">
+
+    <p>
+      Estimativa de CO, NOx, CH₄ e VOC por fatores documentados. Não substitui medição em analisador.
+    </p>
+    
+
+    <div class="alert info emission-intro">
+      <strong>Importante:</strong> fatores de emissão representam médias de populações de equipamentos.
+      O cálculo usa a entrada térmica em base PCS e a vazão seca calculada para converter massa em ppmvd e mg/Nm³.
+    </div>
+
+    <div class="control-grid">
+
+      <label class="field">
+        Modelo de emissão
+        <select id="emissionModel">
+          <option value="ideal">Ideal — CO e NOx = 0</option>
+          <option value="factors" selected>Fatores de emissão</option>
+          <option value="advanced">Modelo avançado / semiempírico</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Tipo de equipamento
+        <select id="emissionEquipment">
+          <option value="boiler">Caldeira industrial</option>
+          <option value="furnace">Forno</option>
+          <option value="burner">Queimador</option>
+          <option value="turbine">Turbina</option>
+          <option value="engine">Motor</option>
+          <option value="custom">Personalizado</option>
+        </select>
+      </label>
+
+      <label class="field" id="emissionCategoryField">
+        Categoria / condição do fator
+        <select id="emissionCategory"></select>
+      </label>
+
+    </div>
+
+    <div id="emissionCustomFields" class="card emission-settings hidden">
+      <h3>Fatores personalizados</h3>
+      <p class="muted">Informe fatores em kg/GJ de entrada térmica (base PCS).</p>
+
+      <div class="control-grid">
+        <label class="field">NOx como NO₂ <div class="input-unit"><input id="customEFNOx" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+        <label class="field">CO <div class="input-unit"><input id="customEFCO" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+        <label class="field">CH₄ <div class="input-unit"><input id="customEFCH4" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+        <label class="field">VOC/THC <div class="input-unit"><input id="customEFVOC" type="number" min="0" step="0.0001" value="0"><span>kg/GJ</span></div></label>
+      </div>
+
+      <label class="field">
+        Fonte / observação do fator personalizado
+        <input id="customEFNote" type="text" placeholder="Ex.: ensaio LBE, certificado do fabricante, norma...">
+      </label>
+    </div>
+
+    <div id="emissionAdvancedFields" class="card emission-settings hidden">
+      <h3>Contexto avançado</h3>
+      <p class="muted">Temperatura e tempo de residência são usados como contexto de engenharia e tendência; não alteram numericamente o fator AP-42 sem calibração específica do equipamento.</p>
+
+      <div class="control-grid">
+        <label class="field">
+          Temperatura da chama
+          <select id="emissionFlameMode">
+            <option value="factor">Usar Tad × fator</option>
+            <option value="manual">Informar manualmente</option>
+          </select>
+        </label>
+
+        <label class="field" id="emissionTadFactorField">
+          Fator sobre Tad
+          <input id="emissionTadFactor" type="number" min="0.1" max="1.2" step="0.01" value="1.00">
+        </label>
+
+        <label class="field hidden" id="emissionFlameTempField">
+          Temperatura real da chama
+          <div class="input-unit"><input id="emissionFlameTemp" type="number" step="1" value="1500"><span>°C</span></div>
+        </label>
+
+        <label class="field">
+          Tempo de residência
+          <div class="input-unit"><input id="emissionResidence" type="number" min="0" step="0.01" value="0.50"><span>s</span></div>
+        </label>
+
+        <label class="field">
+          Tipo de queimador / controle
+          <select id="emissionBurnerType">
+            <option value="conventional">Convencional</option>
+            <option value="low_nox">Low-NOx</option>
+            <option value="low_nox_fgr">Low-NOx + FGR</option>
+          </select>
+        </label>
+
+        <label class="field">
+          Fração molar de NO no NOx
+          <div class="input-unit"><input id="emissionNOFraction" type="number" min="0" max="100" step="0.1" placeholder="opcional"><span>%</span></div>
+          <small>Opcional. Sem este valor, AP-42 fornece apenas NOx total como NO₂ equivalente.</small>
+        </label>
+      </div>
+    </div>
+
+    <div class="actions left-actions">
+      <button class="btn primary" id="btnEstimateEmissions" type="button">Atualizar estimativa</button>
+    </div>
+
+    <div class="result-grid emission-summary-grid">
+      <article class="metric"><span>Vazão estimada de CO</span><strong id="resEmCOkgH">—</strong><small>kg/h</small></article>
+      <article class="metric"><span>Vazão estimada de NOx</span><strong id="resEmNOxkgH">—</strong><small>kg/h como NO₂</small></article>
+      <article class="metric"><span>O₂ seco recalculado após CO/CH₄</span><strong id="resEmO2Dry">—</strong><small>% vol</small></article>
+      <article class="metric"><span>Fechamento de C</span><strong id="resEmCarbonClosure">—</strong><small>CO₂ + CO + CH₄</small></article>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table emission-table">
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>ppmvd</th>
+            <th>mg/Nm³</th>
+            <th>kg/h</th>
+            <th id="emissionO2RefHeader">Corrigido @ 3% O₂</th>
+          </tr>
+        </thead>
+        <tbody id="emissionResultsBody">
+          <tr><td colspan="5">Execute o cálculo principal e atualize a estimativa.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="emission-details-grid">
+      <article class="card">
+        <h3>Fator aplicado e rastreabilidade</h3>
+        <div id="emissionFactorInfo" class="analysis-result">Execute o cálculo para visualizar a fonte.</div>
+      </article>
+
+      <article class="card">
+        <h3>Fechamento e interpretação</h3>
+        <div id="emissionBalanceInfo" class="analysis-result">CO e CH₄ serão realocados a partir do CO₂/H₂O ideal para preservar C/H/O. NOx permanece como massa equivalente de NO₂.</div>
+      </article>
+    </div>
+
+    <div id="emissionWarnings"></div>
+
+    </div>
+
+  </details>
+
+</section>
+
+

@@ -1,0 +1,114 @@
+/* 08-responsivo — Breakpoints gerais da calculadora */
+
+/* RESPONSIVO */
+
+@media (min-width: 760px) {
+  .form-grid.two {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .balance-grid, .charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .wide-chart {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1080px) {
+  .input-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+
+  .panel {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 800px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .summary-grid > div:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  .section-title {
+    flex-direction: column;
+  }
+
+  .toolbar {
+    width: 100%;
+  }
+
+  .toolbar > * {
+    flex: 1 1 150px;
+  }
+}
+
+@media (max-width: 520px) {
+  .container {
+    width: min( 100% - 18px, 1500px );
+  }
+
+  .header-inner, .footer-inner {
+    padding-block: 14px;
+    align-items: flex-start;
+  }
+
+  .logo {
+    width: 68px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .summary-strip {
+    position: static;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid > div:nth-child(5) {
+    grid-column: auto;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions .btn {
+    width: 100%;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .metric strong {
+    font-size: 1.15rem;
+  }
+
+  .input-select {
+    grid-template-columns: minmax(0, 1fr) 88px;
+  }
+
+  .chart-card {
+    padding: 11px;
+  }
+
+  .chart-card-header {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 380px) {
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+}

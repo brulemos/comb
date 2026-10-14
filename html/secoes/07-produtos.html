@@ -1,0 +1,177 @@
+<section class="panel">
+
+  <div class="section-title">
+    <div>
+      <h2>
+        7. Produtos da combustão
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="control-grid">
+
+    <label class="field">
+
+      Base
+
+      <select id="baseProdutos">
+        <option value="umida">Úmida (inclui H₂O)</option>
+        <option value="seca">Seca (exclui H₂O)</option>
+      </select>
+
+    </label>
+
+
+    <label class="field">
+
+      Exibir composição
+
+      <select id="modoTabelaProdutos">
+        <option value="mol">% molar</option>
+        <option value="massa">% mássica</option>
+        <option value="ppmv">ppmv</option>
+        <option value="mgnm3">mg/Nm³</option>
+      </select>
+
+    </label>
+
+
+    <label class="field">
+
+      Vazão dos gases
+
+      <select id="tipoVazaoProdutos">
+        <option value="massica">kg/h</option>
+        <option value="volumetrica">m³/h</option>
+      </select>
+
+    </label>
+
+  </div>
+
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Vazão dos gases</span>
+      <strong id="resVazaoProdutos">—</strong>
+      <small id="resUnidadeVazaoProdutos">kg/h</small>
+    </article>
+
+    <article class="metric">
+      <span>Densidade dos gases</span>
+      <strong id="resDensidadeProdutos">—</strong>
+      <small>kg/m³</small>
+    </article>
+
+    <article class="metric">
+      <span>Massa molar</span>
+      <strong id="resMassaMolarProdutos">—</strong>
+      <small>kg/kmol</small>
+    </article>
+
+    <article class="metric">
+      <span>SO₂</span>
+      <strong id="resSO2Produtos">—</strong>
+      <small id="resSO2BaseLabel">ppmv</small>
+    </article>
+
+    <article class="metric">
+      <span>SO₂</span>
+      <strong id="resSO2mgProdutos">—</strong>
+      <small id="resSO2mgBaseLabel">mg/Nm³ (base úmida)</small>
+    </article>
+
+    <article class="metric">
+      <span>SO₂ corrigido a O₂ ref.</span>
+      <strong id="resSO2Corrigido">—</strong>
+      <small>mg/Nm³ seco</small>
+    </article>
+
+  </div>
+
+
+  <p class="muted">
+    A coluna de composição segue a base selecionada acima: úmida (inclui H₂O) ou seca (exclui H₂O).
+    A correção a O₂ de referência é sempre calculada em base seca. Se O₂ ref. = O₂ seco medido,
+    a concentração corrigida é igual à concentração em mg/Nm³ seco. O₂ e H₂O não são corrigidos;
+    vazões, massas e balanços permanecem inalterados.
+  </p>
+
+  <div class="table-wrap">
+
+    <table class="data-table">
+
+      <thead>
+
+        <tr>
+          <th>Componente</th>
+          <th>kmol/h</th>
+          <th>kg/h</th>
+          <th id="productCompositionHeader">% molar</th>
+          <th id="productO2RefHeader">
+            Corrigido a O₂ ref.<br>
+            <small>mg/Nm³ seco</small>
+          </th>
+        </tr>
+
+      </thead>
+
+      <tbody id="corpoProdutos">
+
+        <tr>
+          <td colspan="5">
+            Execute o cálculo.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <h3 class="subheading">
+    Emissões estequiométricas de CO₂
+  </h3>
+
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>CO₂</span>
+      <strong id="resCO2kgH">—</strong>
+      <small>kg/h</small>
+    </article>
+
+    <article class="metric">
+      <span>CO₂ específico</span>
+      <strong id="resCO2kgKg">—</strong>
+      <small>kg/kg combustível</small>
+    </article>
+
+    <article class="metric">
+      <span>Intensidade de carbono</span>
+      <strong id="resCO2kgMJ">—</strong>
+      <small>kg/MJ combustível</small>
+    </article>
+
+    <article class="metric">
+      <span>CO₂ por energia térmica</span>
+      <strong id="resCO2kgKWh">—</strong>
+      <small>kg/kWh térmico</small>
+    </article>
+
+    <article class="metric">
+      <span>CO₂ diário</span>
+      <strong id="resCO2tDay">—</strong>
+      <small>t/dia</small>
+    </article>
+
+  </div>
+
+</section>
+
+
+

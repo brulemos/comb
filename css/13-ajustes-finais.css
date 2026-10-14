@@ -1,0 +1,45 @@
+/* 13-ajustes-finais — Ajustes finais: botão, visualizador 3D e link de rodapé */
+
+/* BOTÃO CALCULAR , POSIÇÃO */
+
+#btnCalcular {
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .trace-identity {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .trace-jmol-toggle {
+    align-self: flex-start;
+    white-space: normal;
+  }
+
+  .trace-jmol-panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .trace-jmol-viewer {
+    height: 340px;
+  }
+}
+
+/* Link técnico para as premissas em página própria. */
+.site-footer .footer-assumptions-link {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 5px;
+  color: var(--blue-dark);
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-footer .footer-assumptions-link:hover,
+.site-footer .footer-assumptions-link:focus-visible {
+  color: var(--blue);
+  text-decoration: underline;
+}

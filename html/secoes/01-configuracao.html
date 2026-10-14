@@ -1,0 +1,509 @@
+
+
+<section class="panel">
+  <div class="section-title">
+    <div>
+      <h2>1. Configuração do caso</h2>
+      <p>Combustível, vazão/potência, comburente e condições de processo.</p>
+    </div>
+    <!--
+    <div class="toolbar">
+      <button class="btn secondary" id="btnNew" type="button">Novo caso</button>
+      <button class="btn secondary" id="btnSaveCase" type="button">Salvar caso</button>
+      <select id="savedCases" aria-label="Casos salvos">
+        <option value="">Carregar caso...</option>
+      </select>
+    </div>
+  -->
+  </div>
+
+  <div class="input-grid">
+
+    <article class="card mixture-card">
+      <h3>Mistura combustível</h3>
+
+      <div class="form-grid two">
+        <label class="field">
+          Preset
+          <select id="presetCombustivel"></select>
+        </label>
+
+        <label class="field">
+          Buscar componente
+          <input id="componentSearch" type="search" placeholder="Ex.: metano, H2, C3H8">
+        </label>
+      </div>
+
+      <!--
+<div class="toolbar compact-toolbar">
+
+  <button class="btn secondary" id="btnSavePreset" type="button">
+    Salvar mistura como preset
+  </button>
+
+  <button class="btn danger" id="btnDeletePreset" type="button" disabled>
+    Excluir preset próprio
+  </button>
+
+</div>
+-->
+
+      <fieldset class="inline-fieldset">
+        <legend>Base da composição</legend>
+
+        <label>
+          <input type="radio" name="baseComposicao" value="molar" checked>
+          % molar
+        </label>
+
+        <label>
+          <input type="radio" name="baseComposicao" value="massica">
+          % mássica
+        </label>
+      </fieldset>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Fórmula</th>
+              <th>%</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="corpoMistura"></tbody>
+        </table>
+      </div>
+
+      <div class="component-actions">
+        <button class="btn secondary" id="btnAdicionar" type="button">
+          + Adicionar componente
+        </button>
+
+        <button class="btn secondary" id="btnNormalizarFracoes" type="button">
+          Normalizar frações
+        </button>
+
+      </div>
+
+      <div class="composition-box">
+        <div class="composition-head">
+          <span>Total</span>
+          <strong id="totalComposicao">0,00 %</strong>
+        </div>
+
+        <div class="progress">
+          <div id="barraComposicao"></div>
+        </div>
+
+        <small id="statusComposicao">
+          Informe a composição.
+        </small>
+      </div>
+    </article>
+
+
+    <article class="card">
+      <h3>Combustível / carga térmica</h3>
+
+      <fieldset class="inline-fieldset stacked">
+        <legend>Modo de entrada</legend>
+
+        <label>
+          <input type="radio" name="modoEntrada" value="vazao" checked>
+          Informar vazão
+        </label>
+
+        <label>
+          <input type="radio" name="modoEntrada" value="potencia">
+          Informar potência desejada
+        </label>
+      </fieldset>
+
+      <div id="flowInputBlock">
+
+        <label class="field">
+          Tipo de vazão
+
+          <select id="tipoVazao">
+            <option value="massica">Mássica</option>
+            <option value="volumetrica">Volumétrica real</option>
+            <option value="normal">Volumétrica normal</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span id="labelVazaoEntrada">
+            Vazão mássica
+          </span>
+
+          <div class="input-unit">
+            <input
+              type="number"
+              id="vazaoEntrada"
+              value="10.00"
+              min="0"
+              step="0.01"
+            >
+
+            <span id="unidadeVazao">
+              kg/h
+            </span>
+          </div>
+
+          <small id="ajudaVazao"></small>
+        </label>
+
+      </div>
+
+
+      <div id="powerInputBlock" class="hidden">
+
+        <label class="field">
+
+          Potência térmica desejada — PCI
+
+          <div class="input-select">
+
+            <input
+              type="number"
+              id="potenciaDesejada"
+              value="10.0"
+              min="0"
+              step="0.1"
+            >
+
+            <select id="unidadePotenciaDesejada">
+              <option value="kW">kW</option>
+              <option value="MW">MW</option>
+              <option value="cv">cv</option>
+              <option value="hp">hp</option>
+            </select>
+
+          </div>
+
+        </label>
+
+      </div>
+
+
+      <label class="field">
+
+        Temperatura do combustível
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="temperatura"
+            value="25.0"
+            step="0.1"
+          >
+
+          <select id="unidadeTemperatura">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+            <option value="K">K</option>
+          </select>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        Pressão absoluta do combustível
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="pressao"
+            value="1.00"
+            min="0"
+            step="0.01"
+          >
+
+          <select id="unidadePressao">
+            <option value="bar">bar</option>
+            <option value="atm">atm</option>
+            <option value="kgfcm2">kgf/cm²</option>
+          </select>
+
+        </div>
+
+      </label>
+
+    </article>
+
+
+    <article class="card">
+
+      <h3>Comburente</h3>
+
+      <label class="field">
+
+        O₂ do comburente seco
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="o2Comburente"
+            value="20.95"
+            min="0.01"
+            max="100"
+            step="0.01"
+          >
+
+          <span>% mol</span>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        N₂ seco calculado
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="n2Comburente"
+            readonly
+          >
+
+          <span>% mol</span>
+
+        </div>
+
+      </label>
+
+
+      <label class="check-field">
+
+        <input
+          type="checkbox"
+          id="usarUmidadeAr"
+        >
+
+        Adicionar condições do comburente
+
+      </label>
+
+
+      <div
+        id="humidityFields"
+        class="subpanel hidden"
+      >
+
+        <label class="field">
+
+          Temperatura do comburente
+
+          <div class="input-select">
+
+            <input
+              type="number"
+              id="temperaturaComburente"
+              value="25"
+              step="0.1"
+            >
+
+            <select id="unidadeTemperaturaComburente">
+              <option value="C">°C</option>
+              <option value="F">°F</option>
+              <option value="K">K</option>
+            </select>
+
+          </div>
+
+        </label>
+
+
+        <label class="field">
+
+          Umidade relativa
+
+          <div class="input-unit">
+
+            <input
+              type="number"
+              id="umidadeRelativa"
+              value="55"
+              min="0"
+              max="100"
+              step="0.1"
+            >
+
+            <span>%</span>
+
+          </div>
+
+        </label>
+
+
+        <label class="field">
+
+          Pressão absoluta do comburente
+
+          <div class="input-select">
+
+            <input
+              type="number"
+              id="pressaoComburente"
+              value="1"
+              min="0"
+              step="0.01"
+            >
+
+            <select id="unidadePressaoComburente">
+              <option value="bar">bar</option>
+              <option value="atm">atm</option>
+              <option value="kgfcm2">kgf/cm²</option>
+            </select>
+
+          </div>
+
+        </label>
+
+
+        <div class="formula-chip">
+
+          <span>
+            H₂O no comburente
+          </span>
+
+          <strong id="previewH2OAir">
+            —
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <fieldset class="inline-fieldset stacked">
+
+        <legend>
+          Controle de combustão
+        </legend>
+
+        <label>
+          <input
+            type="radio"
+            name="modoCombustao"
+            value="excesso"
+            checked
+          >
+          Informar excesso de comburente
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="modoCombustao"
+            value="o2medido"
+          >
+          Informar O₂ seco medido (válido para λ ≥ 1)
+        </label>
+
+      </fieldset>
+
+
+      <label
+        class="field"
+        id="fieldExcesso"
+      >
+
+        Excesso de comburente
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="excessoAr"
+            value="10"
+            min="0"
+            step="0.1"
+          >
+
+          <span>%</span>
+
+        </div>
+
+      </label>
+
+
+      <label
+        class="field hidden"
+        id="fieldO2Medido"
+      >
+
+        O₂ seco medido
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="o2Medido"
+            value="3"
+            min="0"
+            step="0.01"
+          >
+
+          <span>%</span>
+
+        </div>
+
+      </label>
+
+
+      <div class="formula-chip">
+
+        <strong id="lambdaPreview">
+          λ = 1,100
+        </strong>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <div
+    id="mensagemErro"
+    class="alert error hidden"
+    role="alert"
+  ></div>
+
+
+  <div class="actions">
+
+    <button
+      class="btn ghost"
+      id="btnLimpar"
+      type="button"
+    >
+      Limpar
+    </button>
+
+    <button
+      class="btn primary"
+      id="btnCalcular"
+      type="button"
+    >
+      Calcular Combustão
+    </button>
+
+  </div>
+
+</section>
+
+
+

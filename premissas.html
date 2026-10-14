@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="auth-pending">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premissas e limitações | Calculadora de Combustão - LBE</title>
+  <meta name="description" content="Premissas técnicas e limitações da calculadora de combustão do LBE.">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth-app.css">
+  <link rel="stylesheet" href="premissas.css">
+  <script type="module" src="premissas-guard.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="https://www.ipt.br" target="_blank" rel="noopener noreferrer">
+        <img src="IPT.png" alt="IPT" class="logo">
+      </a>
+      <div class="header-title-block">
+        <h1>Calculadora de Combustão</h1>
+        <p>Laboratório de Bioenergia e Eficiência Energética</p>
+      </div>
+      <div class="auth-user-box" aria-label="Sessão do usuário">
+        <span class="auth-user-label">Usuário conectado</span>
+        <strong id="authUserEmail">Verificando...</strong>
+        <button class="auth-logout-button" id="btnLogout" type="button">Sair</button>
+      </div>
+    </div>
+  </header>
+  <main class="container main-content">
+    <section class="panel premise-intro">
+      <span class="premise-eyebrow">Documentação técnica</span>
+      <h1>Premissas e limitações</h1>
+      <p>Hipóteses aplicadas aos resultados da calculadora e limites de interpretação do modelo.</p>
+    </section>
+    <section class="premise-grid" aria-label="Lista de premissas técnicas">
+      <article class="premise-card">
+        <h2>Combustão</h2>
+        <p>o cálculo estequiométrico principal permanece ideal: C→CO₂, H→H₂O, S→SO₂ e N do combustível→N₂. A seção de emissões reais estimadas calcula CO, NOx, CH₄ e VOC separadamente por fatores de emissão; não é um modelo de equilíbrio químico ou cinética detalhada.</p>
+      </article>
+      <article class="premise-card">
+        <h2>Ar úmido</h2>
+        <p>O₂ e N₂ informados são tratados como composição seca. O vapor d'água é calculado a partir da temperatura, pressão e umidade relativa.</p>
+      </article>
+      <article class="premise-card">
+        <h2>Balanço térmico</h2>
+        <p>a perda de chaminé apresentada é sensível e referenciada a 25 °C, em base PCI. Não inclui radiação, convecção externa, purgas, cinzas ou perdas mecânicas.</p>
+      </article>
+      <article class="premise-card">
+        <h2>Ponto de orvalho</h2>
+        <p>refere-se à condensação de água. Não é ponto de orvalho ácido por H₂SO₄.</p>
+      </article>
+      <article class="premise-card">
+        <h2>CO₂</h2>
+        <p>emissão estequiométrica bruta. O programa não distingue carbono fóssil e biogênico.</p>
+      </article>
+      <article class="premise-card">
+        <h2>Tad</h2>
+        <p>modelo adiabático sem dissociação química; pode superestimar temperaturas elevadas.</p>
+      </article>
+      <article class="premise-card">
+        <h2>Nm³</h2>
+        <p>0 °C e 101,325 kPa absolutos.</p>
+      </article>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a href="https://www.ipt.br" target="_blank" rel="noopener noreferrer">
+        <img src="IPT.png" alt="IPT" class="logo">
+      </a>
+      <div>
+        <strong>EN / LBE</strong>
+        <span>Desenvolvido por brunolemos@ipt.br</span>
+        <span>Copyright © 2026 Instituto de Pesquisas Tecnológicas — IPT</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

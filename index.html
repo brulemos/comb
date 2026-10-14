@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Acesso à Calculadora de Combustão do Laboratório de Bioenergia e Eficiência Energética.">
+  <title>Login - Calculadora de Combustão - LBE</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <link rel="stylesheet" href="login.css">
+  <script type="module" src="auth.js"></script>
+</head>
+<body>
+  <main class="login-page">
+    <section class="login-card" aria-labelledby="loginTitle">
+      <div class="login-brand">
+        <a href="https://www.ipt.br" target="_blank" rel="noopener noreferrer" aria-label="Abrir site do IPT em nova aba">
+          <img src="IPT.png" alt="IPT" class="login-logo">
+        </a>
+
+        <div>
+          <span class="login-kicker">EN / LBE</span>
+          <h1 id="loginTitle">Calculadora de Combustão</h1>
+          <p>Laboratório de Bioenergia e Eficiência Energética</p>
+        </div>
+      </div>
+
+      <div class="login-divider"></div>
+
+      <form id="loginForm" class="login-form" novalidate>
+        <div class="login-intro">
+          <h2>Acesso</h2>
+          <p>Entre com o e-mail e a senha cadastrados.</p>
+        </div>
+
+        <label class="login-field" for="email">
+          <span>E-mail</span>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            inputmode="email"
+            autocomplete="username"
+            placeholder="nome@empresa.com"
+            required
+          >
+        </label>
+
+        <label class="login-field" for="password">
+          <span>Senha</span>
+          <div class="password-row">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Digite sua senha"
+              required
+            >
+            <button id="btnTogglePassword" class="password-toggle" type="button" aria-pressed="false">Mostrar</button>
+          </div>
+        </label>
+
+        <button id="btnLogin" class="login-button" type="submit">Entrar</button>
+
+        <button id="btnResetPassword" class="reset-button" type="button">Esqueci minha senha</button>
+
+        <p id="loginMessage" class="login-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <p class="login-footer">ENERGIA</p>
+    <p>
+        <a href="https://ipt.br/laboratorio-de-bioenergia-e-eficiencia-energetica/" target="_blank" rel="noopener noreferrer" class="link-rodape">
+            Laboratório de Bioenergia e Eficiência Energética
+        </a>
+    </p>
+
+  </main>
+</body>
+</html>

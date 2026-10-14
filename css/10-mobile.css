@@ -1,0 +1,300 @@
+/* 10-mobile — Correções de largura e layout no celular */
+
+/* AJUSTES RESPONSIVOS / MOBILE — Revisão: evita overflow horizontal sem esconder conteúdo */
+
+html, body {
+  max-width: 100%;
+}
+
+body {
+  overflow-x: clip;
+}
+
+/* Filhos de Grid/Flex precisam poder encolher. */
+.container,
+.main-content,
+.panel,
+.card,
+.subpanel,
+.input-grid,
+.form-grid,
+.control-grid,
+.result-grid,
+.balance-grid,
+.charts-grid,
+.section-title,
+.toolbar,
+.actions,
+.chart-card,
+.chart-card-header,
+.field,
+.input-unit,
+.input-select {
+  min-width: 0;
+}
+
+img, canvas, svg {
+  max-width: 100%;
+}
+
+/* Tabelas largas rolam dentro do próprio bloco. */
+.table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  max-width: 100%;
+}
+
+/* Evita que textos longos forcem cards além da viewport. */
+.card,
+.subpanel,
+.metric,
+.analysis-result,
+.alert,
+.section-title,
+.header-inner,
+.footer-inner {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+  .section-title > * {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .toolbar > button, .toolbar > select {
+    min-width: 0;
+  }
+
+  .process-conditions .control-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    min-width: 0;
+  }
+
+  .container {
+    width: 100%;
+    padding-inline: 10px;
+  }
+
+  .main-content {
+    padding-block: 14px 28px;
+  }
+
+  .header-inner, .footer-inner {
+    min-height: 0;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .header-inner > div, .footer-inner > div {
+    min-width: 0;
+  }
+
+  .header-inner h1 {
+    font-size: 1.2rem;
+    line-height: 1.15;
+  }
+
+  .header-inner p {
+    margin-top: 4px;
+    font-size: .78rem;
+    line-height: 1.3;
+  }
+
+  .logo {
+    width: 58px;
+    max-height: 48px;
+    flex: 0 0 auto;
+  }
+
+  /* Resumo compacto: 2 colunas em vez de uma faixa muito alta. */
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-grid > div {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+  }
+
+  .summary-grid > div:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  .summary-grid strong {
+    font-size: .82rem;
+  }
+
+  .panel {
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+  }
+
+  .section-title {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .section-title h2, details summary strong {
+    font-size: 1.08rem;
+    line-height: 1.25;
+  }
+
+  .section-title p {
+    font-size: .8rem;
+    line-height: 1.4;
+  }
+
+  .card, .subpanel {
+    padding: 13px;
+    border-radius: 7px;
+  }
+
+  .card h3, .subpanel h3, .subheading {
+    margin-bottom: 12px;
+  }
+
+  .toolbar, .compact-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .toolbar > *, .compact-toolbar > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .btn, input, select {
+    min-height: 44px;
+  }
+
+  .input-unit, .input-select {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .input-unit input, .input-select input, .input-select select {
+    min-width: 0;
+  }
+
+  .input-unit span {
+    min-width: 58px;
+    padding-inline: 8px;
+    font-size: .82rem;
+  }
+
+  .input-select select {
+    width: auto;
+    max-width: 104px;
+    min-width: 72px;
+    padding-inline: 7px;
+  }
+
+  .inline-fieldset {
+    gap: 10px;
+  }
+
+  .process-conditions .control-grid,
+  .control-grid,
+  .form-grid.two,
+  .balance-grid,
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Cards de resultado continuam legíveis sem apertar o texto. */
+  .result-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .metric {
+    min-width: 0;
+    min-height: 100px;
+    padding: 12px;
+  }
+
+  .metric strong {
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+  }
+
+  .metric .unit-select, .unit-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Inputs/selects da tabela podem encolher no mobile. */
+  .data-table select, .data-table input {
+    min-width: 96px;
+  }
+
+  .data-table th, .data-table td {
+    padding: 8px 7px;
+  }
+
+  .chart-card {
+    width: 100%;
+    min-width: 0;
+    padding: 10px;
+    overflow: hidden;
+  }
+
+  .chart-card-header {
+    gap: 8px;
+  }
+
+  .chart-control, .chart-control select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .chart-card canvas {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .formula-chip, .balance-lines > div {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .container {
+    padding-inline: 7px;
+  }
+
+  .panel {
+    padding: 10px;
+  }
+
+  .card, .subpanel {
+    padding: 11px;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-inner {
+    gap: 9px;
+  }
+
+  .logo {
+    width: 52px;
+  }
+}

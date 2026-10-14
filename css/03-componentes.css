@@ -1,0 +1,102 @@
+/* 03-componentes — Painéis, cards e botões */
+
+/* PAINÉIS */
+
+.main-content {
+  padding-block: 24px 45px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  margin-bottom: 22px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.section-title h2 {
+  margin: 0 0 4px;
+  color: var(--blue-dark);
+  font-size: 1.25rem;
+}
+
+.section-title p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .88rem;
+}
+
+/* BOTÕES */
+
+.toolbar, .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.compact-toolbar {
+  margin: 12px 0;
+}
+
+.component-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actions {
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.left-actions {
+  justify-content: flex-start;
+}
+
+.btn {
+  min-height: 42px;
+  border: 0;
+  border-radius: 5px;
+  padding: 9px 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: var(--blue);
+  color: #fff;
+}
+
+.btn.secondary {
+  background: var(--blue-soft);
+  color: var(--blue-dark);
+}
+
+.btn.ghost {
+  background: #eceff1;
+  color: #455a64;
+}
+
+.btn.danger {
+  background: #ffebee;
+  color: var(--red);
+}
+
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(.96);
+}

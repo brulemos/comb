@@ -1,0 +1,156 @@
+<section class="panel">
+
+  <div class="section-title">
+
+    <div>
+
+      <h2>
+        5. Balanço térmico, chaminé e emissões
+      </h2>
+
+      <p>
+        Resultados de engenharia em base PCI.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="subpanel process-conditions">
+
+    <h3>
+      Condições dos gases de chaminé e referência de emissões
+    </h3>
+
+
+    <div class="control-grid">
+
+
+      <label class="field">
+
+        Temperatura dos gases
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="temperaturaProdutos"
+            value="180"
+            step="0.1"
+          >
+
+          <select id="unidadeTemperaturaProdutos">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+            <option value="K">K</option>
+          </select>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        Pressão absoluta dos gases
+
+        <div class="input-select">
+
+          <input
+            type="number"
+            id="pressaoProdutos"
+            value="1"
+            min="0"
+            step="0.01"
+          >
+
+          <select id="unidadePressaoProdutos">
+            <option value="bar">bar</option>
+            <option value="atm">atm</option>
+            <option value="kgfcm2">kgf/cm²</option>
+          </select>
+
+        </div>
+
+      </label>
+
+
+      <label class="field">
+
+        O₂ de referência para correções de emissões
+
+        <div class="input-unit">
+
+          <input
+            type="number"
+            id="o2Referencia"
+            value="3"
+            min="0"
+            max="20.8"
+            step="0.1"
+          >
+
+          <span>%</span>
+
+        </div>
+
+      </label>
+
+    </div>
+
+  </div>
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Potência química — PCI</span>
+      <strong id="resQChemical">—</strong>
+      <small>kW</small>
+    </article>
+
+    <article class="metric">
+      <span>Mol dos gases de combustão</span>
+      <strong id="resFlueMoles">—</strong>
+      <small>kmol/h</small>
+    </article>
+
+    <article class="metric">
+      <span>Cp dos gases de combustão</span>
+      <strong id="resFlueCp">—</strong>
+      <small>kJ/(kg·K)</small>
+    </article>
+
+    <article class="metric">
+      <span>Densidade dos gases de combustão</span>
+      <strong id="resFlueDensity">—</strong>
+      <small>kg/m³</small>
+    </article>
+
+    <article class="metric">
+      <span>PCI dos gases de combustão</span>
+      <strong id="resFluePCI">—</strong>
+      <small>MJ/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>Entalpia sensível dos gases</span>
+      <strong id="resFlueEnthalpy">—</strong>
+      <small>kJ/kg — ref. 25 °C</small>
+    </article>
+
+    <article class="metric">
+      <span>Ponto de orvalho de H₂O</span>
+      <strong id="resDewPoint">—</strong>
+      <small>°C</small>
+    </article>
+
+  </div>
+
+
+
+
+</section>
+
+
+

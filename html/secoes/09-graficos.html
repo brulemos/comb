@@ -1,0 +1,72 @@
+<section class="panel">
+  <details>
+
+    <summary>
+      <strong>
+        9. Gráficos e análise de processo
+      </strong>
+    </summary>
+
+  <div class="charts-grid">
+
+    <article class="chart-card">
+      <h3>Mistura combustível — % mol</h3>
+      <canvas id="fuelChart"></canvas>
+    </article>
+
+
+    <article class="chart-card">
+      <h3>Comburente — % mol úmido</h3>
+      <canvas id="oxidizerChart"></canvas>
+    </article>
+
+
+    <article class="chart-card">
+      <h3>Gases de combustão</h3>
+      <canvas id="productsChart"></canvas>
+    </article>
+
+
+    <article class="chart-card">
+      <h3>Comburente estequiométrico × real</h3>
+      <canvas id="oxidizerDemandChart"></canvas>
+    </article>
+
+
+    <article class="chart-card wide-chart">
+
+      <div class="chart-card-header">
+
+        <div>
+          <h3>
+            Excesso de comburente × O₂ / CO₂ seco
+          </h3>
+        </div>
+
+        <label class="chart-control">
+
+          Faixa
+
+          <select id="chartExcessMax">
+            <option value="30">0–30%</option>
+            <option value="50" selected>0–50%</option>
+            <option value="100">0–100%</option>
+            <option value="200">0–200%</option>
+          </select>
+
+        </label>
+
+      </div>
+
+      <canvas id="processCurveChart"></canvas>
+
+    </article>
+
+  </div>
+
+  </details>
+
+</section>
+
+
+

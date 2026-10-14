@@ -1,0 +1,45 @@
+/* CSS da calculadora LBE.
+ * IMPORTANTE: a ordem dos arquivos abaixo reproduz exatamente a cascata original.
+ * Não reordene os imports sem revisar a precedência entre as regras.
+ * Consulte GUIA_CSS.md para encontrar o estilo que deseja alterar.
+ */
+
+/* Variáveis globais, fontes e padrões elementares */
+@import url("css/01-base.css");
+
+/* Cabeçalho, rodapé e barra de resumo */
+@import url("css/02-estrutura.css");
+
+/* Painéis, cards e botões */
+@import url("css/03-componentes.css");
+
+/* Campos, seleção de unidades e opções */
+@import url("css/04-formularios.css");
+
+/* Tabelas, composição e mensagens de alerta */
+@import url("css/05-tabelas-e-alertas.css");
+
+/* Indicadores, resultados, balanços e análises */
+@import url("css/06-resultados.css");
+
+/* Gráficos e apresentação das premissas */
+@import url("css/07-graficos-e-premissas.css");
+
+/* Breakpoints gerais da calculadora */
+@import url("css/08-responsivo.css");
+
+/* Estilos destinados à impressão */
+@import url("css/09-impressao.css");
+
+/* Correções de largura e layout no celular */
+@import url("css/10-mobile.css");
+
+/* Ficha técnica e rastreabilidade dos componentes */
+@import url("css/11-rastreabilidade.css");
+
+/* Estimativas de emissões e referências */
+@import url("css/12-emissoes.css");
+
+/* Ajustes finais: botão, visualizador 3D e link de rodapé */
+@import url("css/13-ajustes-finais.css");
+
