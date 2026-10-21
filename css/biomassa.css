@@ -1,0 +1,23 @@
+/* Modo BIOMASSA — independente dos estilos e cálculos de gás.
+ * Os seletores de combustíveis gasosos permanecem intactos.
+ * Ocultar apenas elementos, não reconstruir IDs da calculadora gasosa.
+ */
+.somente-biomassa { display: none !important; }
+body[data-tipo-combustivel="biomassa"] .somente-biomassa { display: revert !important; }
+body[data-tipo-combustivel="biomassa"] .somente-gas { display: none !important; }
+.fuel-type-selector { margin: 0 0 20px; padding: 14px 18px; border: 1px solid var(--line); background: var(--blue-soft); border-radius: 6px; }
+.fuel-type-selector .field { max-width: 380px; }
+.fuel-type-selector small { display: block; margin-top: 6px; color: var(--muted); }
+.bio-subtitle { margin: 20px 0 12px; }
+.bio-composicao-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.bio-composition-summary { margin-top: 14px; padding: 10px; background: #f1f6f8; border-radius: 4px; }
+.bio-composition-summary strong { margin-left: 6px; }
+.bio-ok { color: #1b7c51; } .bio-erro { color: #ad2932; }
+.bio-input-card small { font-size: .82rem; }
+.bio-grafico-gases { display: grid; gap: 10px; }
+.bio-grafico-linha { display: grid; grid-template-columns: 65px 1fr 92px; align-items: center; gap: 8px; }
+.bio-grafico-trilha { height: 12px; background: #e5eef2; border-radius: 6px; overflow: hidden; }
+.bio-grafico-barra { height: 100%; background: #247a9c; border-radius: 6px; }
+.bio-grafico-linha strong { font-size: .84rem; text-align: right; }
+@media(max-width:600px){.bio-composicao-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.fuel-type-selector .field{max-width:100%;}.bio-grafico-linha{grid-template-columns:52px 1fr 70px;}}
+@media print { body[data-tipo-combustivel="biomassa"] .fuel-type-selector{display:none!important;} }

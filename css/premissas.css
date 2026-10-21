@@ -1,0 +1,66 @@
+/* Página de premissas: elementos exclusivos da documentação */
+
+/* A documentação usa as cores, fontes, cabeçalho e rodapé da calculadora. */
+.premise-intro {
+  margin-bottom: 18px;
+  border-top: 4px solid var(--blue);
+}
+
+.premise-intro h1 {
+  margin: 9px 0 8px;
+  color: var(--blue-dark);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.premise-intro p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.premise-eyebrow {
+  font-size: .74rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.premise-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.premise-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+
+.premise-card h2 {
+  color: var(--blue-dark);
+  font-size: 1.06rem;
+  margin: 0 0 10px;
+}
+
+.premise-card p {
+  margin: 0;
+  color: #455a64;
+  line-height: 1.65;
+  font-size: .93rem;
+}
+
+@media (max-width: 740px) {
+  .premise-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .premise-card {
+    padding: 16px;
+  }
+}

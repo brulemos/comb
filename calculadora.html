@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="auth-pending">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Combustão - LBE</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="description" content="Calculadora técnica de combustão, mistura gasosa, estequiometria, balanços e propriedades dos produtos.">
+  <link rel="stylesheet" href="css/calculadora.css">
+  <link rel="stylesheet" href="css/misturador.css">
+  <link rel="stylesheet" href="css/biomassa.css">
+  <link rel="stylesheet" href="css/auth-app.css">
+  <script type="module" src="js/autenticacao/guard.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="https://www.ipt.br" target="_blank" rel="noopener noreferrer">
+      <img src="IPT.png" alt="IPT" class="logo">
+    </a>
+    <div class="header-title-block">
+      <h1>Calculadora de Combustão</h1>
+      <p>Laboratório de Bioenergia e Eficiência Energética</p>
+    </div>
+
+    <div class="auth-user-box" aria-label="Sessão do usuário">
+      <span class="auth-user-label">Usuário conectado</span>
+      <strong id="authUserEmail">Verificando...</strong>
+      <button class="auth-logout-button" id="btnLogout" type="button">Sair</button>
+    </div>
+  </div>
+</header>
+
+<div class="summary-strip">
+  <div class="container summary-grid">
+    <div><span>Combustível</span><strong id="sumFuel">—</strong></div>
+    <div><span>Vazão</span><strong id="sumFlow">—</strong></div>
+    <div><span>Potência</span><strong id="sumPower">—</strong></div>
+    <div><span>λ</span><strong id="sumLambda">—</strong></div>
+    <div><span>O₂ seco</span><strong id="sumO2">—</strong></div>
+  </div>
+</div>
+
+<main class="container main-content">
+</main>
+
+
+<dialog id="componentTraceDialog" class="trace-dialog" aria-labelledby="componentTraceTitle">
+  <div class="trace-dialog-shell">
+    <div class="trace-dialog-header">
+      <div>
+        <span class="trace-kicker">Rastreabilidade do banco de dados</span>
+        <h2 id="componentTraceTitle">Ficha técnica do componente</h2>
+      </div>
+      <button type="button" class="trace-close" id="btnCloseTrace" aria-label="Fechar ficha técnica">×</button>
+    </div>
+
+    <div id="componentTraceBody" class="trace-dialog-body">
+      Selecione um componente.
+    </div>
+  </div>
+</dialog>
+
+
+<footer class="site-footer">
+
+  <div class="container footer-inner">
+
+    <a
+      href="https://www.ipt.br"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+
+      <img
+        src="IPT.png"
+        alt="IPT"
+        class="logo"
+      >
+
+    </a>
+
+
+    <div>
+
+      <strong>
+        EN / LBE
+      </strong>
+
+      <span>
+        Desenvolvido por brunolemos@ipt.br
+      </span>
+
+      <span>
+        Copyright © 2026 Instituto de Pesquisas Tecnológicas — IPT
+      </span>
+
+      <span>
+        Versão
+        <b id="appVersion">0.0.9</b>
+      </span>
+
+      <a class="footer-assumptions-link" href="premissas.html" target="_blank" rel="noopener noreferrer">Premissas e limitações</a>
+
+    </div>
+
+  </div>
+
+</footer>
+
+</body>
+</html>

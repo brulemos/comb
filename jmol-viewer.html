@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visualizador molecular 3D</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Exibição local de um átomo isolado (argonio: [Ar]). Os demais modelos
+       continuam no serviço Jmol/JSmol, sem mudanças no fluxo existente. */
+    #argonViewer {
+      position: relative;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 50% 45%, #f8fbfe, #eaf1f6);
+      color: #254052;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    #argonViewer[hidden] { display: none; }
+    #argonSphere {
+      position: relative;
+      width: 176px;
+      height: 176px;
+      border-radius: 50%;
+      background: radial-gradient(circle at var(--light-x, 31%) var(--light-y, 26%),
+        #f8ffff 0%, #9ce1f4 15%, #489dbf 45%, #226080 72%, #133a54 100%);
+      box-shadow: inset -12px -14px 27px #0c2d4e55,
+        0 24px 40px #1b566c30, 0 0 0 1px #2a5b7345;
+      transform: scale(var(--atom-scale, 1));
+      transition: transform .12s ease;
+      touch-action: none;
+      cursor: grab;
+      outline-offset: 8px;
+    }
+    #argonSphere:active { cursor: grabbing; }
+    #argonSphere:focus-visible { outline: 3px solid #246e96; }
+    #argonSphere::after {
+      content: "Ar";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 43px;
+      font-weight: 700;
+      text-shadow: 0 2px 6px #07304790;
+      pointer-events: none;
+    }
+    .argon-caption {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      font-size: 13px;
+      line-height: 1.45;
+      text-align: center;
+      pointer-events: none;
+    }
+    .argon-controls {
+      position: absolute;
+      right: 16px;
+      bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+    }
+    .argon-controls button {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid #a6b9c6;
+      border-radius: 6px;
+      background: white;
+      color: #254052;
+      font-size: 20px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .argon-controls button:focus-visible { outline: 3px solid #246e96; }
+    #jmolFallback {
+      box-sizing: border-box;
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 24px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #5d6872;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="jmolFallback" role="status">
+    Não foi possível carregar o visualizador 3D. Verifique a conexão com a internet ou use “Abrir em nova aba”.
+  </div>
+
+  <section id="argonViewer" aria-label="Representação tridimensional esquemática do átomo de argônio" hidden>
+    <div class="argon-caption"><strong>Argônio (Ar)</strong> · número atômico 18 · átomo isolado</div>
+    <div id="argonSphere" role="img" tabindex="0"
+      aria-label="Representação esférica tridimensional do átomo de argônio, sem ligações químicas"></div>
+    <div class="argon-controls" aria-label="Controles de ampliação">
+      <button type="button" id="argonZoomOut" aria-label="Reduzir ampliação">−</button>
+      <button type="button" id="argonZoomIn" aria-label="Aumentar ampliação">+</button>
+      <button type="button" id="argonReset" aria-label="Restaurar visualização" style="font-size: 15px">⟲</button>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const model = String(params.get("model") || "").trim();
+      const fallback = document.getElementById("jmolFallback");
+
+      // O argônio é monoatômico: não necessita resolver uma geometria molecular.
+      // Usa visualização local com iluminação direcional e zoom, inclusive offline.
+      if (model === "[Ar]") {
+        const viewer = document.getElementById("argonViewer");
+        const atom = document.getElementById("argonSphere");
+        viewer.hidden = false;
+        let scale = 1;
+        let lightX = 31;
+        let lightY = 26;
+        const pointers = new Map();
+        let pinchDistance = null;
+        let pinchScale = 1;
+        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+        const render = () => {
+          atom.style.setProperty("--atom-scale", String(scale));
+          atom.style.setProperty("--light-x", `${lightX}%`);
+          atom.style.setProperty("--light-y", `${lightY}%`);
+        };
+        const zoom = delta => { scale = clamp(scale + delta, 0.6, 2.2); render(); };
+        document.getElementById("argonZoomIn").addEventListener("click", () => zoom(0.15));
+        document.getElementById("argonZoomOut").addEventListener("click", () => zoom(-0.15));
+        document.getElementById("argonReset").addEventListener("click", () => {
+          scale = 1; lightX = 31; lightY = 26; render();
+        });
+        atom.addEventListener("wheel", event => {
+          event.preventDefault();
+          zoom(event.deltaY < 0 ? 0.12 : -0.12);
+        }, { passive: false });
+        atom.addEventListener("pointerdown", event => {
+          atom.setPointerCapture(event.pointerId);
+          pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        });
+        atom.addEventListener("pointermove", event => {
+          const prev = pointers.get(event.pointerId);
+          if (!prev) return;
+          pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+          const active = Array.from(pointers.values());
+          if (active.length > 1) {
+            const d = Math.hypot(active[0].x - active[1].x, active[0].y - active[1].y);
+            if (pinchDistance !== null) scale = clamp(pinchScale * d / pinchDistance, 0.6, 2.2);
+            else { pinchDistance = d; pinchScale = scale; }
+          } else {
+            lightX = clamp(lightX + (event.clientX - prev.x) * 0.3, 12, 82);
+            lightY = clamp(lightY + (event.clientY - prev.y) * 0.3, 10, 80);
+          }
+          render();
+        });
+        const release = event => {
+          pointers.delete(event.pointerId);
+          pinchDistance = null;
+          pinchScale = scale;
+          if (atom.hasPointerCapture(event.pointerId)) atom.releasePointerCapture(event.pointerId);
+        };
+        atom.addEventListener("pointerup", release);
+        atom.addEventListener("pointercancel", release);
+        atom.addEventListener("lostpointercapture", event => {
+          pointers.delete(event.pointerId);
+          pinchDistance = null;
+          pinchScale = scale;
+        });
+        atom.addEventListener("keydown", event => {
+          if (event.key === "+" || event.key === "=") { event.preventDefault(); zoom(0.15); }
+          if (event.key === "-") { event.preventDefault(); zoom(-0.15); }
+          if (event.key === "ArrowLeft") { event.preventDefault(); lightX = clamp(lightX - 5, 12, 82); render(); }
+          if (event.key === "ArrowRight") { event.preventDefault(); lightX = clamp(lightX + 5, 12, 82); render(); }
+        });
+        render();
+        return;
+      }
+
+      if (!model) {
+        fallback.style.display = "flex";
+        fallback.textContent = "Modelo molecular não informado.";
+        return;
+      }
+
+      const src =
+        "https://chemapps.stolaf.edu/jmol/jmol.php?model=" +
+        encodeURIComponent(model) +
+        "&inline&id=traceJmolApplet&width=100%25&height=100%25";
+
+      const safeSrc = src
+        .replace(/&/g, "&amp;")
+        .replace(/\"/g, "&quot;");
+
+      document.write(
+        `<script type="text/javascript" src="${safeSrc}" onerror="document.getElementById('jmolFallback').style.display='flex';"><\/script>`
+      );
+    }());
+  </script>
+</body>
+</html>

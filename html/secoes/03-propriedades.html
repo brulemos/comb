@@ -1,0 +1,212 @@
+<section class="panel">
+
+  <div class="section-title">
+    <div>
+      <h2>
+        3. Propriedades da mistura
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Massa molar</span>
+      <strong id="resMassaMolar">—</strong>
+      <small>kg/kmol</small>
+    </article>
+
+    <article class="metric">
+      <span>PCS</span>
+      <strong id="resPCS">—</strong>
+      <small>MJ/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>PCI</span>
+      <strong id="resPCI">—</strong>
+      <small>MJ/kg</small>
+    </article>
+
+    <article class="metric">
+      <span>Cp(T)</span>
+      <strong id="resCp">—</strong>
+      <small>kJ/(kg·K)</small>
+    </article>
+
+    <article class="metric">
+      <span>Densidade</span>
+      <strong id="resDensidade">—</strong>
+      <small id="resUnidadeDensidade">kg/m³</small>
+      <select id="modoDensidade" class="unit-select" aria-label="Exibir densidade real ou normal">
+        <option value="real" selected>Real</option>
+        <option value="normal">Normal</option>
+      </select>
+    </article>
+
+    <article class="metric">
+
+      <span>
+        Wobbe superior
+      </span>
+
+      <strong id="resWobbe">
+        —
+      </strong>
+
+      <select
+        id="unidadeWobbe"
+        class="unit-select"
+      >
+
+        <option value="MJNm3">MJ/Nm³</option>
+        <option value="kWhNm3">kWh/Nm³</option>
+        <option value="kcalNm3">kcal/Nm³</option>
+
+      </select>
+
+    </article>
+
+
+
+    <article class="metric">
+      <span>Wobbe inferior</span>
+      <strong id="resWobbeInferior">—</strong>
+      <select id="unidadeWobbeInferior" class="unit-select" aria-label="Unidade do Wobbe inferior">
+        <option value="MJNm3">MJ/Nm³</option>
+        <option value="kWhNm3">kWh/Nm³</option>
+        <option value="kcalNm3">kcal/Nm³</option>
+      </select>
+    </article>
+
+
+
+
+    <article class="metric">
+      <span>Potência térmica — PCS</span>
+      <strong id="resPotenciaPCS">—</strong>
+      <select id="unidadePotenciaPCS" class="unit-select" aria-label="Unidade da potência térmica PCS">
+        <option value="kW">kW</option>
+        <option value="MW">MW</option>
+        <option value="cv">cv</option>
+        <option value="hp">hp</option>
+      </select>
+    </article>
+
+    <article class="metric">
+
+      <span>
+        Potência térmica — PCI
+      </span>
+
+      <strong id="resPotencia">
+        —
+      </strong>
+
+      <select
+        id="unidadePotencia"
+        class="unit-select"
+      >
+
+        <option value="kW">kW</option>
+        <option value="MW">MW</option>
+        <option value="cv">cv</option>
+        <option value="hp">hp</option>
+
+      </select>
+
+    </article>
+
+  </div>
+
+
+  <h3 class="subheading">
+    Detalhamento da mistura
+  </h3>
+
+
+  <div class="table-wrap">
+
+    <table class="data-table">
+
+      <thead>
+
+        <tr>
+          <th>Componente</th>
+          <th>% mol</th>
+          <th>% massa</th>
+          <th>M</th>
+          <th>PCS</th>
+          <th>PCI</th>
+          <th>Cp(T)</th>
+          <th>Método Cp</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="mixtureDetailBody">
+        <tr>
+          <td colspan="8">
+            Execute o cálculo.
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <h3 class="subheading">
+    Composição elementar mássica
+  </h3>
+
+  <p class="muted">
+    Percentual em massa dos elementos no combustível. Z representa a fração residual de elementos não representados por C, H, N, O e S.
+  </p>
+
+  <div class="result-grid">
+
+    <article class="metric">
+      <span>Carbono — C</span>
+      <strong id="resElemC">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Hidrogênio — H</span>
+      <strong id="resElemH">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Nitrogênio — N</span>
+      <strong id="resElemN">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Oxigênio — O</span>
+      <strong id="resElemO">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Enxofre — S</span>
+      <strong id="resElemS">—</strong>
+      <small>% massa</small>
+    </article>
+
+    <article class="metric">
+      <span>Z — outros</span>
+      <strong id="resElemZ">—</strong>
+      <small>% massa</small>
+    </article>
+
+  </div>
+
+</section>
+
+
+

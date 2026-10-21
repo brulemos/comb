@@ -1,0 +1,185 @@
+<section class="panel"><div class="section-title">
+<div>
+<h2>6. Produtos da combustão, propriedades dos gases e chaminé</h2>
+</div>
+</div><div class="subpanel process-conditions"><div class="chimney-layout"><div class="chimney-column chimney-conditions"><h3 class="chimney-column-title">Condições da chaminé</h3><label class="field">
+
+        Temperatura dos gases
+
+        <div class="input-select">
+<input id="temperaturaProdutos" step="0.1" type="number" value="180"/>
+<select id="unidadeTemperaturaProdutos">
+<option value="C">°C</option>
+<option value="F">°F</option>
+<option value="K">K</option>
+</select>
+</div>
+</label><label class="field">
+
+        Pressão absoluta dos gases
+
+        <div class="input-select">
+<input id="pressaoProdutos" min="0" step="0.01" type="number" value="1"/>
+<select id="unidadePressaoProdutos">
+<option value="bar">bar</option>
+<option value="atm">atm</option>
+<option value="kgfcm2">kgf/cm²</option>
+</select>
+</div>
+</label><label class="field">
+
+        O₂ de referência
+
+        <div class="input-unit">
+<input id="o2Referencia" max="20.8" min="0" step="0.1" type="number" value="3"/>
+<span>%</span>
+</div>
+</label></div><div class="chimney-column chimney-visualization"><h3 class="chimney-column-title">Visualização dos resultados</h3><div class="chimney-view-options somente-gas"><div class="field chimney-visual-field"><span class="chimney-field-label">Base</span><select aria-hidden="true" aria-label="Base" class="chimney-select-native" id="baseProdutos" tabindex="-1">
+<option value="umida">Úmida (inclui H₂O)</option>
+<option value="seca">Seca (exclui H₂O)</option>
+</select><div aria-label="Base" class="chimney-segments" data-select-id="baseProdutos" role="group"><button aria-pressed="false" class="chimney-segment" data-value="umida" type="button">Úmida</button><button aria-pressed="false" class="chimney-segment" data-value="seca" type="button">Seca</button></div></div><div class="field chimney-visual-field"><span class="chimney-field-label">Composição</span><select aria-label="Composição" id="modoTabelaProdutos">
+<option value="mol">% molar</option>
+<option value="massa">% mássica</option>
+<option value="ppmv">ppmv</option>
+<option value="mgnm3">mg/Nm³</option>
+</select></div><div class="field chimney-visual-field"><span class="chimney-field-label">Vazão dos gases</span><select aria-hidden="true" aria-label="Vazão dos gases" class="chimney-select-native" id="tipoVazaoProdutos" tabindex="-1">
+<option value="massica">kg/h</option>
+<option value="volumetrica">m³/h</option>
+</select><div aria-label="Vazão dos gases" class="chimney-segments" data-select-id="tipoVazaoProdutos" role="group"><button aria-pressed="false" class="chimney-segment" data-value="massica" type="button">kg/h</button><button aria-pressed="false" class="chimney-segment" data-value="volumetrica" type="button">m³/h</button></div></div></div><div class="chimney-view-options somente-biomassa"><div class="field chimney-visual-field"><span class="chimney-field-label">Base</span><select aria-hidden="true" aria-label="Base" class="chimney-select-native" id="bioBaseProdutos" tabindex="-1"><option value="umida">Úmida (inclui H₂O)</option><option value="seca">Seca (exclui H₂O)</option></select><div aria-label="Base" class="chimney-segments" data-select-id="bioBaseProdutos" role="group"><button aria-pressed="false" class="chimney-segment" data-value="umida" type="button">Úmida</button><button aria-pressed="false" class="chimney-segment" data-value="seca" type="button">Seca</button></div></div><div class="field chimney-visual-field"><span class="chimney-field-label">Composição</span><select aria-label="Composição" id="bioModoTabelaProdutos"><option value="mol">% molar</option><option value="massa">% mássica</option><option value="ppmv">ppmv</option><option value="mgnm3">mg/Nm³</option></select></div><div class="field chimney-visual-field"><span class="chimney-field-label">Vazão dos gases</span><select aria-hidden="true" aria-label="Vazão dos gases" class="chimney-select-native" id="bioTipoVazaoProdutos" tabindex="-1"><option value="massica">kg/h</option><option value="volumetrica">m³/h</option></select><div aria-label="Vazão dos gases" class="chimney-segments" data-select-id="bioTipoVazaoProdutos" role="group"><button aria-pressed="false" class="chimney-segment" data-value="massica" type="button">kg/h</button><button aria-pressed="false" class="chimney-segment" data-value="volumetrica" type="button">m³/h</button></div></div></div></div></div></div>
+<div class="subpanel sensitivity-panel" aria-labelledby="sensitivityHeading">
+  <div class="sensitivity-header">
+    <h3 id="sensitivityHeading">Análise de sensibilidade</h3>
+    <button class="btn secondary sensitivity-restore" id="sensRestaurar" type="button" disabled
+      title="Restaurar excesso de ar e umidade anteriores à simulação">Restaurar condições</button>
+  </div>
+  <div class="sensitivity-layout">
+    <div class="sensitivity-control">
+      <div class="sensitivity-heading-row">
+        <label for="sensExcessoSlider">Excesso de comburente</label>
+        <output id="sensExcessoValor" for="sensExcessoSlider sensExcessoNumero">10,0%</output>
+      </div>
+      <input id="sensExcessoSlider" class="sensitivity-slider" type="range" min="0" max="200" step="0.1" value="10" aria-describedby="sensExcessoEstado" />
+      <div class="sensitivity-fine-adjust">
+        <button id="sensExcessoMenos" class="sensitivity-step" type="button" aria-label="Reduzir excesso de comburente em um ponto percentual">−</button>
+        <div class="sensitivity-number-field">
+          <input id="sensExcessoNumero" type="number" min="0" step="0.1" value="10" aria-label="Excesso de comburente em porcentagem" />
+          <span>%</span>
+        </div>
+        <button id="sensExcessoMais" class="sensitivity-step" type="button" aria-label="Aumentar excesso de comburente em um ponto percentual">+</button>
+      </div>
+      <small id="sensExcessoEstado" class="sensitivity-status">Ajuste de 1 ponto percentual nos botões.</small>
+    </div>
+    <div class="sensitivity-control">
+      <div class="sensitivity-heading-row">
+        <label for="sensUmidadeSlider">Umidade relativa do comburente</label>
+        <output id="sensUmidadeValor" for="sensUmidadeSlider sensUmidadeNumero">55,0%</output>
+      </div>
+      <input id="sensUmidadeSlider" class="sensitivity-slider" type="range" min="0" max="100" step="0.1" value="55" aria-describedby="sensUmidadeEstado" />
+      <div class="sensitivity-fine-adjust">
+        <button id="sensUmidadeMenos" class="sensitivity-step" type="button" aria-label="Reduzir umidade relativa em um ponto percentual">−</button>
+        <div class="sensitivity-number-field">
+          <input id="sensUmidadeNumero" type="number" min="0" max="100" step="0.1" value="55" aria-label="Umidade relativa do comburente em porcentagem" />
+          <span>%</span>
+        </div>
+        <button id="sensUmidadeMais" class="sensitivity-step" type="button" aria-label="Aumentar umidade relativa em um ponto percentual">+</button>
+      </div>
+      <label class="sensitivity-humidity-switch"><input id="sensUmidadeAtiva" type="checkbox" /> Considerar umidade do comburente</label>
+      <small id="sensUmidadeEstado" class="sensitivity-status">Ative a opção acima para aplicar a umidade nos cálculos.</small>
+    </div>
+  </div>
+  <small class="sensitivity-footnote">Os controles ajustam os mesmos parâmetros da seção 1. Os resultados de todas as seções são recalculados após o primeiro cálculo do caso. No modo O₂ seco medido, o excesso é determinado pelo motor e não pode ser ajustado aqui.</small>
+</div>
+<div class="result-grid"><article class="metric">
+<span>Vazão dos gases</span>
+<strong id="resVazaoProdutos">—</strong>
+<small id="resUnidadeVazaoProdutos">kg/h</small>
+</article><article class="metric">
+<span>Densidade dos gases</span>
+<strong id="resDensidadeProdutos">—</strong>
+<small>kg/m³</small>
+</article><article class="metric">
+<span>Massa molar</span>
+<strong id="resMassaMolarProdutos">—</strong>
+<small>kg/kmol</small>
+</article><article class="metric">
+<span>Mol dos gases de combustão</span>
+<strong id="resFlueMoles">—</strong>
+<small>kmol/h (base úmida)</small>
+</article><article class="metric">
+<span>Cp dos gases de combustão</span>
+<strong id="resFlueCp">—</strong>
+<small>kJ/(kg·K) — base úmida</small>
+</article></div><div class="result-grid"><article class="metric">
+<span>PCI dos gases de combustão</span>
+<strong id="resFluePCI">—</strong>
+<small>MJ/kg</small>
+</article><article class="metric">
+<span>Entalpia sensível dos gases</span>
+<strong id="resFlueEnthalpy">—</strong>
+<small>kJ/kg — ref. 25 °C</small>
+</article><article class="metric">
+<span>Ponto de orvalho de H₂O</span>
+<strong id="resDewPoint">—</strong>
+<small>°C</small>
+</article></div><div class="result-grid"><article class="metric">
+<span>SO₂</span>
+<strong id="resSO2Produtos">—</strong>
+<small id="resSO2BaseLabel">ppmv</small>
+</article><article class="metric">
+<span>SO₂</span>
+<strong id="resSO2mgProdutos">—</strong>
+<small id="resSO2mgBaseLabel">mg/Nm³ (base úmida)</small>
+</article><article class="metric">
+<span>SO₂ corrigido a O₂ ref.</span>
+<strong id="resSO2Corrigido">—</strong>
+<small>mg/Nm³ seco</small>
+</article></div><p class="alert warning hidden" id="avisoCorrecaoO2Gas" role="status"></p><div class="table-wrap">
+<table class="data-table">
+<thead>
+<tr>
+<th>Componente</th>
+<th>kmol/h</th>
+<th>kg/h</th>
+<th id="productCompositionHeader">% molar</th>
+<th id="productO2RefHeader">
+            Corrigido a O₂ ref.<br/>
+<small>mg/Nm³ seco</small>
+</th>
+</tr>
+</thead>
+<tbody id="corpoProdutos">
+<tr>
+<td colspan="5">
+            Execute o cálculo.
+          </td>
+</tr>
+</tbody>
+</table>
+</div><div class="result-grid">
+<article class="metric">
+<span>CO₂</span>
+<strong id="resCO2kgH">—</strong>
+<small>kg/h</small>
+</article>
+<article class="metric">
+<span>CO₂ específico</span>
+<strong id="resCO2kgKg">—</strong>
+<small>kg/kg combustível</small>
+</article>
+<article class="metric">
+<span>Intensidade de carbono</span>
+<strong id="resCO2kgMJ">—</strong>
+<small>kg/MJ combustível</small>
+</article>
+<article class="metric">
+<span>CO₂ por energia térmica</span>
+<strong id="resCO2kgKWh">—</strong>
+<small>kg/kWh térmico</small>
+</article>
+<article class="metric">
+<span>CO₂ diário</span>
+<strong id="resCO2tDay">—</strong>
+<small>t/dia</small>
+</article>
+</div></section>
+

@@ -1,0 +1,56 @@
+<article class="card somente-biomassa bio-input-card">
+  <h3>Composição elementar da biomassa</h3>
+  <p class="muted">C, H, O, N, S e cinzas devem estar em <strong>base seca</strong> (% em massa). A umidade é informada separadamente, em base <strong>como recebida</strong>.</p>
+  <div class="form-grid two">
+    <label class="field">Nome da biomassa<input id="bioNome" value="Biomassa personalizada" type="text"></label>
+    <label class="field">Umidade como recebida (%)<input id="bioUmidade" type="number" min="0" max="99.99" step="0.1" value="30"></label>
+  </div>
+  <h3 class="bio-subtitle">Análise elementar e cinzas — base seca</h3>
+  <div class="bio-composicao-grid">
+    <label class="field">C (%)<input id="bioC" type="number" min="0" max="100" step="0.01" value="50"></label>
+    <label class="field">H (%)<input id="bioH" type="number" min="0" max="100" step="0.01" value="6"></label>
+    <label class="field">O (%)<input id="bioO" type="number" min="0" max="100" step="0.01" value="42"></label>
+    <label class="field">N (%)<input id="bioN" type="number" min="0" max="100" step="0.01" value="0.3"></label>
+    <label class="field">S (%)<input id="bioS" type="number" min="0" max="100" step="0.01" value="0.1"></label>
+    <label class="field">Cinzas (%)<input id="bioCinzas" type="number" min="0" max="100" step="0.01" value="1.6"></label>
+  </div>
+  <div class="bio-composition-summary">Fechamento da análise seca: <strong id="bioSoma">100,0000%</strong> <span id="bioSomaStatus"></span></div>
+  <small class="muted">O modelo exige fechamento a 100%; não normaliza automaticamente dados laboratoriais. As cinzas são consideradas inertes.</small>
+  <h3 class="bio-subtitle">Poder calorífico superior — base seca</h3>
+  <div class="form-grid two">
+    <label class="field">Origem do PCS
+      <select id="bioPCSFonte"><option value="medido">PCS seco medido</option><option value="estimado" selected>Estimado pela análise elementar</option></select>
+    </label>
+    <label class="field hidden" id="bioPCSMedidoField">PCS seco medido (MJ/kg)
+      <input id="bioPCSMedido" type="number" min="0.01" step="0.01" value="18.5">
+    </label>
+  </div>
+  <small class="muted">Estimativa opcional: Channiwala–Parikh (2002). PCI calculado considerando H e umidade, com referência de vaporização de H₂O a 25°C.</small>
+</article>
+
+<article class="card somente-biomassa bio-input-card">
+  <h3>Alimentação e propriedades do sólido</h3>
+  <fieldset class="inline-fieldset stacked">
+    <legend>Modo de entrada</legend>
+    <label><input type="radio" name="bioEntrada" value="vazao" checked>Informar vazão alimentada</label>
+    <label><input type="radio" name="bioEntrada" value="potencia">Informar potência desejada (PCI)</label>
+  </fieldset>
+  <label class="field" id="bioCampoVazao">Vazão como recebida
+    <div class="input-unit"><input id="bioVazao" type="number" min="0" step="0.1" value="100"><span>kg/h</span></div>
+  </label>
+  <label class="field hidden" id="bioCampoPotencia">Potência desejada — PCI
+    <div class="input-select"><input id="bioPotenciaAlvo" type="number" min="0" step="0.1" value="500"><select id="bioPotenciaAlvoUnidade"><option value="kW">kW</option><option value="MW">MW</option><option value="cv">cv</option><option value="hp">hp</option></select></div>
+  </label>
+  <div class="form-grid two">
+    <label class="field">Temperatura de alimentação
+      <div class="input-select"><input id="bioTemperatura" type="number" step="0.1" value="25"><select id="bioUnidadeTemperatura"><option value="C">°C</option><option value="F">°F</option><option value="K">K</option></select></div>
+    </label>
+    <label class="field">Cp médio do sólido seco (assumido)
+      <div class="input-unit"><input id="bioCpSolido" type="number" min="0.01" step="0.1" value="1.5"><span>kJ/kg·K</span></div>
+    </label>
+    <label class="field">Densidade a granel medida (opcional)
+      <div class="input-unit"><input id="bioDensidadeGranel" type="number" min="0" step="1" placeholder="Não informada"><span>kg/m³</span></div>
+    </label>
+  </div>
+  <small class="muted">Densidade a granel não é densidade intrínseca da biomassa. Cp do combustível e das cinzas são aproximações, utilizadas apenas para entalpia sensível e temperatura adiabática.</small>
+</article>
