@@ -1,0 +1,29 @@
+<dialog id="mixDialog" class="mix-dialog" aria-labelledby="mixTitle">
+  <div class="mix-shell">
+    <header class="mix-header">
+      <h2 id="mixTitle">Misturador de combustíveis</h2>
+      <button type="button" id="mixClose" class="btn secondary">Fechar ×</button>
+    </header>
+    <label class="mix-field" for="mixBasis"
+      >Base da proporção entre misturas
+      <select id="mixBasis"
+        ><option value="molar">% molar</option
+        ><option value="massica">% mássica</option></select
+      >
+    </label>
+    <p class="fraction-help">Até 4 casas decimais; frações de traço em ppm, mantendo a precisão do cálculo.</p>
+    <div id="mixSources"></div>
+    <div class="mix-actions">
+      <button type="button" class="btn secondary" id="mixAdd">+ Adicionar mistura</button>
+      <button type="button" class="btn secondary" id="mixNormalize">Normalizar proporções</button>
+    </div>
+    <div id="mixStatus" role="status" aria-live="polite"></div>
+    <section class="mix-preview" aria-label="Resultado da mistura">
+      <h3>Composição resultante</h3>
+      <div id="mixPreview" aria-live="polite">Selecione as fontes e ajuste as proporções.</div>
+    </section>
+    <div class="mix-actions mix-final-actions">
+      <button type="button" class="btn primary" id="mixApply">Aplicar à composição</button>
+    </div>
+  </div>
+</dialog>

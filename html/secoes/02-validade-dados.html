@@ -1,0 +1,118 @@
+<!-- Fragmento: validade dados. IDs e ordem dos elementos utilizados pela interface. -->
+<section class="panel">
+  <details>
+    <summary>
+      <strong> Validade dos dados e avisos </strong>
+    </summary>
+
+    <div class="details-content">
+      <p> Faixas de Cp, estimativas e premissas aplicadas. </p>
+
+      <div id="warningsList" class="warnings-list">
+        <div class="alert info"> Execute um cálculo. </div>
+      </div>
+    </div>
+  </details>
+  <template id="uiPremisesTemplate">
+<section class="panel premise-intro">
+        <span class="premise-eyebrow">Documentação técnica</span>
+        <h1>Premissas e limitações</h1>
+        <p
+          >Hipóteses aplicadas aos resultados da calculadora e limites de interpretação do
+          modelo.</p
+        >
+      </section>
+      <section class="premise-grid" aria-label="Lista de premissas técnicas">
+        <article class="premise-card">
+          <h2>Combustão</h2>
+          <p
+            >O cálculo estequiométrico principal considera combustão completa ideal: C→CO₂, H→H₂O,
+            S→SO₂ e N do combustível→N₂. Não há estimativa de CO, NOx, CH₄ não queimado, VOC ou
+            material particulado. Não é um modelo de equilíbrio químico ou cinética detalhada.</p
+          >
+        </article>
+        <article class="premise-card">
+          <h2>Ar úmido</h2>
+          <p
+            >O₂ e N₂ informados são tratados como composição seca. O vapor d'água é calculado a
+            partir da temperatura, pressão e umidade relativa.</p
+          >
+        </article>
+        <article class="premise-card">
+          <h2>Balanço térmico</h2>
+          <p
+            >a perda de chaminé apresentada é sensível e referenciada a 25 °C, em base PCI. Não
+            inclui radiação, convecção externa, purgas, cinzas ou perdas mecânicas.</p
+          >
+        </article>
+        <article class="premise-card">
+          <h2>Ponto de orvalho</h2>
+          <p>refere-se à condensação de água. Não é ponto de orvalho ácido por H₂SO₄.</p>
+        </article>
+        <article class="premise-card">
+          <h2>CO₂</h2>
+          <p>emissão estequiométrica bruta. O programa não distingue carbono fóssil e biogênico.</p>
+        </article>
+        <article class="premise-card">
+          <h2>Tad</h2>
+          <p>modelo adiabático sem dissociação química; pode superestimar temperaturas elevadas.</p>
+        </article>
+        <article class="premise-card">
+          <h2>Nm³</h2>
+          <p>0 °C e 101,325 kPa absolutos.</p>
+        </article>
+      </section>
+      <section class="panel">
+        <h2>Domínio e dados termodinâmicos — revisão 0.0.10</h2>
+        <p
+          >PCS e PCI têm referência de combustão a 25 °C. Nm³ continua referido a 0 °C e 101,325
+          kPa. H₂, CO, CH₄, H₂S, acetileno, etileno, etano, propano e butanos usam poderes
+          caloríficos calculados por entalpias de formação NIST. Para os demais combustíveis, o PCS
+          legado tem referência original não confirmada e é interpretado como estimativa a 25 °C; o
+          PCI é recalculado de modo consistente com o calor latente da água nessa temperatura. Isso
+          não constitui certificação ISO 6976.</p
+        >
+        <p
+          >Cp de etano, propano e butanos usa interpolação linear de tabela NIST. As correlações
+          estimadas e tabelas só são usadas na faixa cadastrada, sem extrapolação. Outras
+          correlações Shomate extrapoladas continuam sinalizadas. NO e NO₂ não são aceitos como
+          entrada reativa deste modelo.</p
+        >
+        <p
+          >O₂ seco é indefinido se não existir corrente seca. A inversão para λ exige uma solução
+          identificável e deve reproduzir o O₂ informado. Para H₂/O₂ puro, não se pode determinar λ
+          pela análise seca.</p
+        >
+        <p
+          >Não há cálculo de mudança de fase ou equilíbrio de mistura. Abaixo do ponto de orvalho,
+          os resultados gasosos são hipotéticos sem condensação e recebem aviso. O ponto de orvalho
+          da água está limitado a −80 até 100 °C; valores fora desse domínio ficam indisponíveis.
+          Hidrocarbonetos pesados e pressões elevadas requerem verificação de fase e de
+          compressibilidade.</p
+        >
+        <p
+          >Se a chaminé exceder a temperatura adiabática ou exigir mais energia que a entrada, é
+          necessário aporte externo de calor. Isso recebe aviso e não deve ser interpretado como
+          eficiência do equipamento.</p
+        >
+      </section>
+      <section class="panel">
+        <h2>Captação e pré-aquecimento do ar</h2>
+        <p
+          >A umidade relativa é informada na captação. Quando as condições estão desvinculadas, o
+          modelo determina a composição úmida usando temperatura e pressão de captação e conserva a
+          quantidade de vapor por massa de comburente seco até a entrada. A entalpia sensível usa a
+          temperatura de entrada na combustão. Não há adição ou remoção de água nesse percurso.
+          Condições com condensação na faixa da aproximação psicrométrica são rejeitadas.</p
+        >
+        <h2>Comparação de cenários</h2>
+        <p
+          >O comparador usa os mesmos motores da calculadora principal, com referência fixa e até
+          três alternativas do mesmo tipo de combustível. As bases são mesma potência química PCI,
+          mesma vazão mássica ou entradas livres. Os resultados não representam potência útil nem
+          rendimento do equipamento. Somente o botão Aplicar cenário transfere uma alternativa para
+          o caso principal. Fechar mantém o caso principal inalterado.</p
+        >
+      </section>
+  </template>
+</section>

@@ -1,0 +1,44 @@
+<dialog id="compareDialog" class="compare-dialog" aria-labelledby="compareTitle">
+  <div class="compare-shell">
+    <header class="compare-header"
+      ><div
+        ><span class="compare-kicker">Análise de alternativas</span
+        ><h2 id="compareTitle">Comparador de cenários</h2></div
+      ><button type="button" class="btn secondary" id="compareClose" autofocus
+        >Fechar ×</button
+      ></header
+    >
+    <div class="compare-content">
+      <p id="compareReferenceInfo" class="alert info"></p>
+      <div class="compare-tools"
+        ><label class="field"
+          >Base de comparação<select id="compareBasis"
+            ><option value="potencia">Mesma potência química — PCI (kW)</option
+            ><option value="massica">Mesma vazão de combustível (kg/h)</option
+            ><option value="livre">Entradas livres</option></select
+          ></label
+        ><button type="button" class="btn secondary" id="compareAdd"
+          >+ Adicionar alternativa</button
+        ></div
+      >
+      <p class="muted"
+        >A referência fica fixa. Edite até três alternativas; fechar não altera o caso principal.
+        Potência química não é potência útil do equipamento.</p
+      >
+      <div class="compare-workspace" id="compareWorkspace"
+        ><div id="compareScenarios" class="compare-scenarios"></div>
+        <section class="compare-results" aria-labelledby="compareResultsTitle"
+          ><h3 id="compareResultsTitle">Resultados e diferenças em relação à referência</h3
+          ><div
+            id="compareTable"
+            class="compare-table-wrap"
+            tabindex="0"
+            aria-label="Tabela comparativa, com rolagem horizontal"
+          ></div></section
+      ></div>
+      <p id="compareStatus" role="status" aria-live="polite"></p>
+      <details class="compare-warnings"
+        ><summary>Avisos e hipóteses dos cenários</summary><div id="compareWarnings"></div
+      ></details> </div
+  ></div>
+</dialog>
