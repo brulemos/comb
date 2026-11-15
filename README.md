@@ -2,7 +2,7 @@
 
 **Ferramenta web para análise de combustíveis gasosos e biomassa, com foco em propriedades físico-químicas, estequiometria e balanços de massa e energia.**
 
-**[Acessar a calculadora](https://brulemos.github.io/Comb/)**
+**[Acessar a calculadora](https://brulemos.github.io/comb)**
 
 ## Sobre o projeto
 
