@@ -150,12 +150,16 @@ export function caracterizarBiomassa({
 /** Vazão alimentada, seca, água e cinzas em kg/h. */
 export function vazoesBiomassa(
   caracterizacao,
-  { entrada = "vazao", vazaoKgH, potenciaDesejadaKW }
+  { entrada = "vazao", vazaoKgH, potenciaDesejadaKW, powerBasis = "pci" }
 ) {
+  if (entrada === "potencia" && !["pci", "pcs"].includes(powerBasis)) {
+    throw new Error("Base da potência inválida: selecione PCI ou PCS.");
+  }
+  const poderCalorifico =
+    powerBasis === "pcs" ? caracterizacao.pcsRecebido : caracterizacao.pciRecebido;
   const m =
     entrada === "potencia"
-      ? (validoPositivo(potenciaDesejadaKW, "Potência desejada (kW)") * 3.6) /
-        caracterizacao.pciRecebido
+      ? (validoPositivo(potenciaDesejadaKW, "Potência desejada (kW)") * 3.6) / poderCalorifico
       : validoPositivo(vazaoKgH, "Vazão alimentada (kg/h)");
   return {
     recebida: m,

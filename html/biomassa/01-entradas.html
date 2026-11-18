@@ -77,8 +77,7 @@
       alimentada</label
     >
     <label
-      ><input type="radio" name="bioEntrada" value="potencia" />Informar potência desejada
-      (PCI)</label
+      ><input type="radio" name="bioEntrada" value="potencia" />Informar potência desejada</label
     >
   </fieldset>
   <label class="field" id="bioCampoVazao"
@@ -87,18 +86,27 @@
       ><input id="bioVazao" type="number" min="0" step="0.1" value="100" /><span>kg/h</span></div
     >
   </label>
-  <label class="field hidden" id="bioCampoPotencia"
-    >Potência desejada — PCI
-    <div class="input-select"
-      ><input id="bioPotenciaAlvo" type="number" min="0" step="0.1" value="500" /><select
-        id="bioPotenciaAlvoUnidade"
-        ><option value="kW">kW</option
-        ><option value="MW">MW</option
-        ><option value="cv">cv</option
-        ><option value="hp">hp</option></select
-      ></div
-    >
-  </label>
+  <div class="form-grid two hidden" id="bioCampoPotencia">
+    <label class="field">
+      Potência desejada
+      <div class="input-select">
+        <input id="bioPotenciaAlvo" type="number" min="0" step="0.1" value="500" />
+        <select id="bioPotenciaAlvoUnidade">
+          <option value="kW">kW</option>
+          <option value="MW">MW</option>
+          <option value="cv">cv</option>
+          <option value="hp">hp</option>
+        </select>
+      </div>
+    </label>
+    <label class="field" for="bioBasePotencia">
+      Base da potência
+      <select id="bioBasePotencia">
+        <option value="pci">PCI</option>
+        <option value="pcs">PCS</option>
+      </select>
+    </label>
+  </div>
   <div class="form-grid two">
     <label class="field"
       >Temperatura de alimentação

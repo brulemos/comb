@@ -272,8 +272,10 @@ function caseSnapshot() {
 function validateCase(data) {
  if(!data||data.formato!=='lbe-caso-v1'||data.versao!==1||!data.fields||!data.radios||!Array.isArray(data.mixture))throw new Error('Arquivo de caso incompatível. Use um arquivo salvo por Salvar caso completo.');
  if(data.mixture.length>500)throw new Error('O arquivo excede o limite de componentes.');
- for(const id of persisted.keys())if(id!=='nomeMistura'&&!Object.hasOwn(data.fields,id))throw new Error(`Campo ausente no caso: ${id}.`);
- for(const [id,value]of Object.entries(data.fields)) {
+ // Casos anteriores ao seletor informavam a potência em PCI.
+ const fields={basePotenciaDesejada:'pci',bioBasePotencia:'pci',...data.fields};
+ for(const id of persisted.keys())if(id!=='nomeMistura'&&!Object.hasOwn(fields,id))throw new Error(`Campo ausente no caso: ${id}.`);
+ for(const [id,value]of Object.entries(fields)) {
   const el=persisted.get(id);if(!el)throw new Error(`Campo não reconhecido no caso: ${id}.`);
   if(el.type==='checkbox'){if(typeof value!=='boolean')throw new Error(`Valor inválido: ${id}.`);}
   else if(typeof value!=='string'||value.length>(id==='nomeMistura'?120:1000))throw new Error(`Valor inválido: ${id}.`);
@@ -283,7 +285,7 @@ function validateCase(data) {
  for(const name of radioNames)if(!sourceRadios.some((el)=>el.name===name&&el.value===data.radios[name]))throw new Error(`Modo inválido: ${name}.`);
  if(Object.keys(data.radios).some((name)=>!radioNames.includes(name)))throw new Error('Modo de entrada não reconhecido.');
  for(const row of data.mixture)if(!row||typeof row.id!=='string'||(row.id!==''&&!window.Combustion.getGas(row.id))||!['string','number'].includes(typeof row.percentual)||(row.percentual!==''&&(!Number.isFinite(Number(row.percentual))||Number(row.percentual)<0||Number(row.percentual)>100)))throw new Error('Composição inválida no arquivo de caso.');
- return data;
+ return {...data,fields};
 }
 async function saveCase() {
  const data=caseSnapshot();validateCase(data);

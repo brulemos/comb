@@ -20,7 +20,7 @@ export function referenceFromResult(kind, result) {
     const options = cloneCase(result.opts);
     options.flowType = "massica";
     options.flowValue = result.flows.mass;
-    options.targetPowerKW = result.powerKW;
+    options.targetPowerKW = options.powerBasis === "pcs" ? result.powerPCSKW : result.powerKW;
     options.humidity = normalizeScenarioAir(options.humidity);
     return {
       kind,
@@ -35,7 +35,8 @@ export function referenceFromResult(kind, result) {
   if (kind === "biomassa") {
     const input = cloneCase(result.entrada);
     input.vazaoKgH = result.f.recebida;
-    input.potenciaDesejadaKW = result.f.potenciaPCIKW;
+    input.potenciaDesejadaKW =
+      input.powerBasis === "pcs" ? result.f.potenciaPCSKW : result.f.potenciaPCIKW;
     input.umidadeAr = normalizeScenarioAir(input.umidadeAr);
     return { kind, name: "Referência", source: "reference", input };
   }
@@ -57,6 +58,7 @@ export function evaluateScenario(scenario, basis = "livre", anchor = null) {
     opts.humidity = normalizeScenarioAir(opts.humidity);
     if (basis === "potencia") {
       opts.inputMode = "potencia";
+      opts.powerBasis = "pci";
       opts.targetPowerKW = anchor.powerKW;
     }
     if (basis === "massica") {
@@ -74,6 +76,7 @@ export function evaluateScenario(scenario, basis = "livre", anchor = null) {
     input.umidadeAr = normalizeScenarioAir(input.umidadeAr);
     if (basis === "potencia") {
       input.entrada = "potencia";
+      input.powerBasis = "pci";
       input.potenciaDesejadaKW = anchor.powerKW;
     }
     if (basis === "massica") {
@@ -139,6 +142,7 @@ export function gasStateFromScenario(effective, o2Ref = 3) {
     flowType: o.flowType,
     flow: o.flowValue,
     targetPower: o.targetPowerKW,
+    powerBasis: o.powerBasis ?? "pci",
     targetPowerUnit: "kW",
     fuelT: o.fuelT - 273.15,
     fuelTUnit: "C",

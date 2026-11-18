@@ -135,9 +135,14 @@ export function iniciarComparador({ getBiomass, applyBiomass }) {
                 gas ? e.inputMode : e.entrada,
                 [
                   ["vazao", "Vazão de combustível"],
-                  ["potencia", "Potência química — PCI"]
+                  ["potencia", "Potência química"]
                 ]
-              )}${field("Vazão alimentada", massPath, gas ? e.flowValue : e.vazaoKgH, "kg/h")}${field("Potência desejada — PCI", powerPath, gas ? e.targetPowerKW : e.potenciaDesejadaKW, "kW")}</div>
+              )}${field("Vazão alimentada", massPath, gas ? e.flowValue : e.vazaoKgH, "kg/h")}${field("Potência desejada", powerPath, gas ? e.targetPowerKW : e.potenciaDesejadaKW, "kW")}${choice(
+                "Base da potência",
+                prefix + "powerBasis",
+                e.powerBasis ?? "pci",
+                [["pci", "PCI"], ["pcs", "PCS"]]
+              )}</div>
               ${conditionsCard(s)}<p class="compare-scenario-status" role="status"></p><button type="button" class="btn primary compare-apply" data-action="apply">Aplicar cenário</button></article>`;
       })
       .join("");
@@ -187,6 +192,10 @@ export function iniciarComparador({ getBiomass, applyBiomass }) {
         ? String(state.basis === "livre" ? Number(value.toPrecision(12)) : Number(value.toFixed(3)))
         : "";
     }
+    const powerBasisControl = control(prefix + "powerBasis");
+    powerBasisControl.closest("label").hidden = mode !== "potencia";
+    powerBasisControl.disabled = state.basis !== "livre";
+    powerBasisControl.value = state.basis === "livre" ? e.powerBasis ?? "pci" : "pci";
     card.querySelector("[data-capture-block]").hidden = !h.enabled;
     for (const [cap, entry] of [
       ["captureTempK", "tempK"],

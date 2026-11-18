@@ -598,12 +598,14 @@ const __modules = {
       };
     }
 
-    /** Obtém vazões equivalentes para potência desejada no PCI (kW). */
-    function flowsFromPower(targetPowerKW, pci, rho, rhoN) {
-      if (!(pci > 0)) {
-        throw new Error("PCI da mistura deve ser positivo para o modo por potência.");
+    /** Obtém vazões para a potência desejada (kW) e o poder calorífico escolhido (MJ/kg). */
+    function flowsFromPower(targetPowerKW, calorificValue, rho, rhoN, powerBasis = "pci") {
+      if (!(calorificValue > 0)) {
+        throw new Error(
+          `${powerBasis.toUpperCase()} da mistura deve ser positivo para o modo por potência.`
+        );
       }
-      const mass = (targetPowerKW * 3.6) / pci;
+      const mass = (targetPowerKW * 3.6) / calorificValue;
       return {
         mass,
         volume: mass / rho,

@@ -182,6 +182,7 @@ export function collectOptions() {
     inputMode: inputMode(),
     flowType: els.flowType.value,
     flowValue: inputMode() === "vazao" ? num("#vazaoEntrada") : 0,
+    powerBasis: $("#basePotenciaDesejada").value,
     targetPowerKW: C.powerToKW(num("#potenciaDesejada"), $("#unidadePotenciaDesejada").value),
     combustionMode: combustionMode(),
     excessPct: combustionMode() === "excesso" ? num("#excessoAr") : 0,

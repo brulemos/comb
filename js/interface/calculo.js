@@ -65,9 +65,19 @@ export function computeCase(comp, opts, presetName = null) {
   const cpR = C.mixtureCp(comp, opts.fuelT);
   const rho = C.idealDensity(M, opts.fuelT, opts.fuelP);
   const rhoN = C.normalDensity(M);
+  const powerBasis = opts.powerBasis ?? "pci";
+  if (opts.inputMode === "potencia" && !["pci", "pcs"].includes(powerBasis)) {
+    throw new Error("Base da potência inválida: selecione PCI ou PCS.");
+  }
   const flows =
     opts.inputMode === "potencia"
-      ? C.flowsFromPower(opts.targetPowerKW, pci, rho, rhoN)
+      ? C.flowsFromPower(
+          opts.targetPowerKW,
+          powerBasis === "pcs" ? pcs : pci,
+          rho,
+          rhoN,
+          powerBasis
+        )
       : C.flowsFromInput(opts.flowType, opts.flowValue, rho, rhoN);
   const fuelMolar = flows.mass / M;
   const powerKW = (flows.mass * pci) / 3.6;

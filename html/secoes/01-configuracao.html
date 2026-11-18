@@ -173,9 +173,9 @@
         </label>
       </div>
 
-      <div id="powerInputBlock" class="hidden">
+      <div id="powerInputBlock" class="form-grid two hidden">
         <label class="field">
-          Potência térmica desejada — PCI
+          Potência térmica desejada
 
           <div class="input-select">
             <input type="number" id="potenciaDesejada" value="10.0" min="0" step="0.1" />
@@ -187,6 +187,13 @@
               <option value="hp">hp</option>
             </select>
           </div>
+        </label>
+        <label class="field" for="basePotenciaDesejada">
+          Base da potência
+          <select id="basePotenciaDesejada">
+            <option value="pci">PCI</option>
+            <option value="pcs">PCS</option>
+          </select>
         </label>
       </div>
 

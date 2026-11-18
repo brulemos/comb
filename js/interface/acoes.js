@@ -44,6 +44,7 @@ export function applyState(s) {
   }
   els.flowType.value = s.flowType || "massica";
   els.flow.value = s.flow ?? 10;
+  $("#basePotenciaDesejada").value = s.powerBasis ?? "pci";
   $("#potenciaDesejada").value = s.targetPower ?? 100;
   $("#unidadePotenciaDesejada").value = s.targetPowerUnit || "kW";
   $("#temperatura").value = s.fuelT ?? 25;

@@ -99,6 +99,7 @@ function dadosEntrada() {
     pcsSecoMedido: pcsModo === "medido" ? N("bioPCSMedido") : undefined,
     entrada: fluxo,
     vazaoKgH: fluxo === "vazao" ? N("bioVazao") : undefined,
+    powerBasis: $("#bioBasePotencia").value,
     potenciaDesejadaKW:
       fluxo === "potencia"
         ? powerToKW(N("bioPotenciaAlvo"), $("#bioPotenciaAlvoUnidade").value)
@@ -395,8 +396,8 @@ function limpar() {
   $("#bioPCSFonte").value = "estimado";
   $("#bioPCSMedidoField").classList.add("hidden");
   document.querySelector('input[name="bioEntrada"][value="vazao"]').checked = true;
-  $("#bioCampoVazao").classList.remove("hidden");
-  $("#bioCampoPotencia").classList.add("hidden");
+  $("#bioBasePotencia").value = "pci";
+  atualizarVisibilidadeEntrada();
   caso = null;
   $("#mensagemErro").classList.add("hidden");
   atualizarFechamento();
@@ -549,6 +550,7 @@ export function aplicarEntradaBiomassa(e) {
     bioVazao: e.vazaoKgH ?? "",
     bioPotenciaAlvo: e.potenciaDesejadaKW ?? "",
     bioPotenciaAlvoUnidade: "kW",
+    bioBasePotencia: e.powerBasis ?? "pci",
     bioTemperatura: e.fuelT - 273.15,
     bioUnidadeTemperatura: "C",
     bioCpSolido: e.cpBiomassa,
